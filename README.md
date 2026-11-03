@@ -57,3 +57,7 @@ Open [`ui/preview.html`](ui/preview.html) in a browser — tabs Perception／Exe
 ## License
 
 MIT · see [LICENSE](LICENSE) · [NOTICE](NOTICE)
+
+## Reference builds
+
+Sample allocated trees (YAML + preview art): see [`docs/builds/`](./docs/builds/).

@@ -1,0 +1,36 @@
+schema: agent-skilltree/build/v0
+id: ops-squad
+title: "Ops Squad"
+points_spent: 32
+blurb_zh: "營運小隊：子代理 Squad、並行、Gateway On-Demand＋完整同意／Safety。"
+blurb_en: "Ops squad: subagent squad, parallel, gateway on-demand + full consent/safety."
+preview: ./ops-squad.png
+tree_ref: ../../skills/mvp-36.yaml
+nsfw_gate: false
+allocate_order:
+  - gov.soul.base
+  - gov.soul.exp.1
+  - gov.audit.1
+  - gov.consent.write
+  - gov.consent.shell
+  - gov.consent.network
+  - gov.safety.1
+  - gov.respec
+  - gov.build_export
+  - perception.search.1
+  - perception.search.2
+  - perception.files.1
+  - perception.memory.1
+  - execution.tools.whitelist
+  - execution.call_budget.1
+  - execution.call_budget.2
+  - execution.loop_budget.1
+  - execution.loop_budget.2
+  - execution.subagent.summon
+  - execution.subagent.squad
+  - execution.parallel.1
+  - execution.parallel.2
+  - execution.gateway.on_demand
+notes:
+  - Human-only allocate; Constitution immutable.
+  - Preview PNG is conceptual UI reference, not a shipped renderer screenshot.

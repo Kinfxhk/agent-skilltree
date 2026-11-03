@@ -1,0 +1,28 @@
+schema: agent-skilltree/build/v0
+id: reader-safe
+title: "Reader Safe"
+points_spent: 17
+blurb_zh: "只睇唔亂改：視覺／搜尋／檔案讀＋基礎治理；幾乎唔開 Shell／Gateway。"
+blurb_en: "Read-first: vision/search/files read + baseline governance; almost no shell/gateway."
+preview: ./reader-safe.png
+tree_ref: ../../skills/mvp-36.yaml
+nsfw_gate: false
+allocate_order:
+  - gov.soul.base
+  - gov.audit.1
+  - gov.consent.write
+  - gov.safety.1
+  - gov.respec
+  - gov.build_export
+  - perception.vision.1
+  - perception.vision.2
+  - perception.search.1
+  - perception.search.2
+  - perception.research.1
+  - perception.memory.1
+  - perception.files.1
+  - execution.tools.whitelist
+  - execution.call_budget.1
+notes:
+  - Human-only allocate; Constitution immutable.
+  - Preview PNG is conceptual UI reference, not a shipped renderer screenshot.

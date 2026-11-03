@@ -1,0 +1,34 @@
+schema: agent-skilltree/build/v0
+id: research-scout
+title: "Research Scout"
+points_spent: 27
+blurb_zh: "調研斥候：視覺滿級、搜尋／調研、出站網絡 ask；Shell 少開。"
+blurb_en: "Research scout: vision capstone, search/research, outbound ask; little shell."
+preview: ./research-scout.png
+tree_ref: ../../skills/mvp-36.yaml
+nsfw_gate: false
+allocate_order:
+  - gov.soul.base
+  - gov.soul.exp.1
+  - gov.audit.1
+  - gov.consent.write
+  - gov.consent.network
+  - gov.content_policy
+  - gov.respec
+  - gov.build_export
+  - perception.vision.1
+  - perception.vision.2
+  - perception.vision.3
+  - perception.search.1
+  - perception.search.2
+  - perception.research.1
+  - perception.memory.1
+  - perception.files.1
+  - execution.tools.whitelist
+  - execution.call_budget.1
+  - execution.call_budget.2
+  - execution.parallel.1
+  - execution.network.1
+notes:
+  - Human-only allocate; Constitution immutable.
+  - Preview PNG is conceptual UI reference, not a shipped renderer screenshot.

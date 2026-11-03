@@ -1,0 +1,35 @@
+schema: agent-skilltree/build/v0
+id: coder-local
+title: "Coder Local"
+points_spent: 26
+blurb_zh: "本地寫碼：檔案讀寫、Shell、路徑衛生／方言、預算與審計。"
+blurb_en: "Local coding: FS R/W, shell, path hygiene/dialect, budgets + audit."
+preview: ./coder-local.png
+tree_ref: ../../skills/mvp-36.yaml
+nsfw_gate: false
+allocate_order:
+  - gov.soul.base
+  - gov.soul.exp.1
+  - gov.audit.1
+  - gov.consent.write
+  - gov.consent.shell
+  - gov.safety.1
+  - gov.respec
+  - gov.build_export
+  - gov.strict_path_mode
+  - perception.files.1
+  - perception.files.2
+  - perception.memory.1
+  - perception.search.1
+  - execution.tools.whitelist
+  - execution.tools.extended
+  - execution.call_budget.1
+  - execution.call_budget.2
+  - execution.loop_budget.1
+  - execution.loop_budget.2
+  - execution.shell.1
+  - execution.path_hygiene.1
+  - execution.shell_dialect.1
+notes:
+  - Human-only allocate; Constitution immutable.
+  - Preview PNG is conceptual UI reference, not a shipped renderer screenshot.
