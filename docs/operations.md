@@ -96,6 +96,7 @@ npm run ui:serve
 ```
 
 - Left rail **Presets** buttons apply a named build (same `applyPreset` order as the CLI) and write the shared state file.
+- Locale: defaults to the browser/DSH language (`navigator.language`); force with `SKILLTREE_LOCALE=zh_HK npm run ui:serve` or `?lang=en` / `?lang=zh`.
 - `GET /api/state` reads the state file.
 - `POST /api/state` writes `{ unlocked, pointsRemaining }` (human UI only).
 - The server binds `127.0.0.1`; do not expose it.
