@@ -22,8 +22,8 @@ import {
 } from './tree-api.js';
 import type { SkillTreeState } from './types.js';
 
-/** Prefer tools + approval when present; empty inject keeps Host loadable without peers. */
-export const inject: string[] = [];
+/** Cordis requires an explicit inject before ctx.tools can be read. */
+export const inject: string[] = ['tools'];
 
 export const name = 'agent-skilltree';
 
@@ -59,7 +59,7 @@ export function apply(ctx: LooseCtx = {}): void {
   const register = ctx.tools?.register?.bind(ctx.tools);
   if (register) {
     register({
-      name: 'skilltree.inspect',
+      name: 'skilltree_inspect',
       description: 'Inspect the human-allocated skill tree, unlockable nodes and compiled AgentPolicy.',
       parameters: {},
       output: textOutput,
@@ -69,7 +69,7 @@ export function apply(ctx: LooseCtx = {}): void {
     });
 
     register({
-      name: 'skilltree.export',
+      name: 'skilltree_export',
       description: 'Export SkillTreeState + AgentPolicy manifest (read-only).',
       parameters: {},
       output: textOutput,

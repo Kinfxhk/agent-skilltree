@@ -88,6 +88,30 @@ rm -rf ~/.dsh/profiles/skilltree-test
 
 The profile is a copy; it does not touch the live web/desktop profiles.
 
+### Live smoke test
+
+With a `DEEPSEEK_API_KEY` in the launching environment:
+
+```bash
+DEEPSEEK_API_KEY=... dsh --profile skilltree-test \
+  "Use the bash tool to run exactly: printf SKILLTREE_OK . Then report the output."
+```
+
+Expected: `The command ran successfully with exit code 0. Output: SKILLTREE_OK`.
+
+Guard test:
+
+```bash
+DEEPSEEK_API_KEY=... dsh --profile skilltree-test \
+  "Use the bash tool to run exactly: copy C:\\foo\\bar.txt D:\\x.txt . Report the exact error if it is refused."
+```
+
+Expected: refused before bash runs, with `skilltree: windows_path_on_posix`. The agent should not
+retry with a translated path.
+
+The plugin declares `inject: ['tools']`; DSH tool names use `skilltree_inspect` / `skilltree_export`
+(dots are rejected by the model API).
+
 ## 7. UI
 
 ```bash
@@ -108,7 +132,7 @@ npm run ui:serve
 1. `npm run check` is green (19 tests).
 2. `npm run skilltree -- preset solo-dev` → `toolAsk` contains `patch`/`release`.
 3. `npm run skilltree -- preset personal-assistant` → `toolAsk` contains `email_send`/`calendar_write`.
-4. Fake host: registered tools are `skilltree.inspect` / `skilltree.export`; guard rejects `email_send`
+4. Fake host: registered tools are `skilltree_inspect` / `skilltree_export`; guard rejects `email_send`
    and `copy C:\...`; `ls /tmp` passes.
 5. DSH `--dump-config` has `agent-skilltree`; `--help` loads.
 6. UI: click a `READY` node → inspector; Allocate decrements points; footer says `State: file`.

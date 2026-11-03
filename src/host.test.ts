@@ -35,7 +35,7 @@ describe('DSH host half', () => {
       on: () => {},
     });
 
-    expect(tools.map((t) => t.name)).toEqual(['skilltree.inspect', 'skilltree.export']);
+    expect(tools.map((t) => t.name)).toEqual(['skilltree_inspect', 'skilltree_export']);
     const inspected = JSON.parse(await tools[0].execute({}, {}));
     expect(inspected.state).toBeDefined();
     expect(inspected.policy.toolDeny).toContain('email_send');

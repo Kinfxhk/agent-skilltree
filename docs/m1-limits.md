@@ -10,10 +10,12 @@ line honest.
 - `pathHygieneCheck`: allow / deny / ask; never silently rewrites argv.
 - `ctx.tools.guard`: rejects path-hygiene violations and tools in `policy.toolDeny`.
 - Sensitive default-deny: `email_send`, `calendar_write`, `release`, `patch`.
-- `skilltree.inspect` / `skilltree.export`: executable, read-only.
+- `skilltree_inspect` / `skilltree_export`: executable, read-only.
 - Human CLI: `grant`, `allocate`, `respec`, `preset`, `status`, `export`.
 - Persistent state: `~/.dsh/skilltree-state.json`, shared by CLI / UI server / plugin.
 - 19 vitest tests + `npm run check` green; DSH `skilltree-test` profile loads.
+- Live DSH task: `printf SKILLTREE_OK` ran; `copy C:\\...` was refused by the guard; `skilltree_inspect` returned `toolDeny`.
+- Cordis `inject: ['tools']` and host-safe tool names (`skilltree_inspect`, `skilltree_export`; DSH rejects dots).
 
 ## Not real yet
 
@@ -21,7 +23,6 @@ line honest.
 |---|---|
 | `ask` approval flow | Guard treats `ask` as deny; the user cannot approve a call in-flow |
 | turnCap / subagent depth / sandbox floor | Compiled into `AgentPolicy`, but not enforced by a runtime hook |
-| Live model task | No `DEEPSEEK_API_KEY` in the headless test profile, so no end-to-end agent turn was run |
 | Cordis client UI | `ui/preview.html` is static HTML/JS, not a mounted DSH client plugin |
 | UI vs CLI state | M1 UI server shares the file; the standalone `python3 -m http.server` fallback uses localStorage |
 | Public install | No npm registry package yet; local path/link only |

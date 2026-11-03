@@ -97,14 +97,33 @@ or a registry install for production. See [`docs/operations.md`](docs/operations
 |---|---|
 | `PolicyCompiler` (SkillTreeState → AgentPolicy) | ✅ real; 19 tests |
 | `pathHygieneCheck` (Path Hygiene + Shell Dialect; allow/deny/ask; never rewrites argv) | ✅ real |
-| `ctx.tools.guard` (path hygiene + locked sensitive tools) | ✅ real; fake-host and DSH profile load verified |
-| `skilltree.inspect` / `skilltree.export` | ✅ executable read-only tools |
+| `ctx.tools.guard` (path hygiene + locked sensitive tools) | ✅ real; **live DSH task refused `copy C:\...`** |
+| `skilltree_inspect` / `skilltree_export` | ✅ executable read-only tools; **live inspect verified** |
 | Human CLI `grant` / `allocate` / `respec` / `preset` | ✅ real |
 | Persistent state shared by CLI / UI / plugin | ✅ real |
 | Interactive grimdark UI | ✅ static HTML/JS; Grok Imagine art |
 | `ask` approval flow | ❌ M1 treats `ask` as deny |
 | turnCap / subagent / sandbox runtime enforcement | ❌ compiled into policy, not yet enforced |
 | Cordis client UI / product Gateway | ❌ later |
+
+## Verified end-to-end
+
+With `DEEPSEEK_API_KEY` in the launching environment and the `skilltree-test` profile:
+
+```text
+Use the bash tool to run exactly: printf SKILLTREE_OK
+→ The command ran successfully with exit code 0. Output: SKILLTREE_OK
+
+Use the bash tool to run exactly: copy C:\foo\bar.txt D:\x.txt
+→ refused before bash: "skilltree: windows_path_on_posix"
+   (agent did not retry with a translated path)
+
+Use the skilltree_inspect tool and report policy.toolDeny
+→ ["email_send", "calendar_write"]
+```
+
+This proves the plugin is mounted, the read-only tool executes, and the guard blocks a real
+policy-violating command in a live agent turn. `ask` approval is still M2 (see `docs/m1-limits.md`).
 
 ## UI
 
