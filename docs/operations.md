@@ -11,7 +11,7 @@
 ```bash
 npm ci
 npm run build
-npm test          # 18 tests
+npm test          # 19 tests
 npm run check     # build + test + required files + secret scan
 npm run ui:data   # generate ui/nodes.js from skills/mvp-36.yaml
 ```
@@ -105,7 +105,7 @@ npm run ui:serve
 
 ## 8. What to verify after a change
 
-1. `npm run check` is green (18 tests).
+1. `npm run check` is green (19 tests).
 2. `npm run skilltree -- preset solo-dev` → `toolAsk` contains `patch`/`release`.
 3. `npm run skilltree -- preset personal-assistant` → `toolAsk` contains `email_send`/`calendar_write`.
 4. Fake host: registered tools are `skilltree.inspect` / `skilltree.export`; guard rejects `email_send`
