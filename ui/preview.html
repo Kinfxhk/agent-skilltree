@@ -3,8 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>agent-skilltree · UI preview (M0)</title>
-  <link rel="stylesheet" href="./tokens.css" />
+  <title>agent-skilltree · UI preview (Dark Gothic Fantasy)</title>
+  <!-- Preferred: tokens-gothic.css (locked to Boss gothic-*-preview.jpg). tokens.css = v1 gold-green archive. -->
+  <link rel="stylesheet" href="./tokens-gothic.css" />
   <style>
     * { box-sizing: border-box; }
     body {
@@ -12,7 +13,7 @@
       min-height: 100vh;
       background: var(--bg-deep);
       color: var(--text-primary);
-      font-family: system-ui, "Noto Sans TC", sans-serif;
+      font-family: "Libre Baskerville", "Noto Serif TC", Georgia, serif;
     }
     .shell {
       display: grid;
@@ -24,24 +25,30 @@
     .panel {
       background: var(--bg-panel);
       border: var(--rim-width) solid var(--gold-dim);
-      border-radius: 6px;
+      border-radius: 4px;
       padding: 12px;
+      box-shadow: inset 0 0 0 1px var(--accent-crimson);
     }
-    .canvas { background: var(--parchment); }
+    .canvas {
+      background: var(--parchment);
+      background-image: linear-gradient(180deg, rgba(92,42,34,0.12), transparent 40%);
+    }
     .tabs button {
       display: block;
       width: 100%;
       margin: 0 0 8px;
       padding: 10px;
-      border: 1px solid var(--stone);
+      border: 1px solid var(--iron);
       background: transparent;
       color: var(--text-muted);
       cursor: pointer;
+      font-family: inherit;
+      letter-spacing: 0.02em;
     }
     .tabs button[data-tab="perception"].active { color: var(--tab-perception); border-color: var(--tab-perception); }
     .tabs button[data-tab="execution"].active { color: var(--tab-execution); border-color: var(--tab-execution); }
     .tabs button[data-tab="governance"].active { color: var(--tab-governance); border-color: var(--tab-governance); }
-    .nodes { display: flex; flex-wrap: wrap; gap: 16px; padding: 24px; align-items: center; }
+    .nodes { display: flex; flex-wrap: wrap; gap: 20px; padding: 24px; align-items: center; }
     .node {
       width: var(--node-size);
       height: var(--node-size);
@@ -50,40 +57,79 @@
       background: var(--stone);
       display: grid;
       place-items: center;
-      font-size: 11px;
+      font-size: 10px;
       text-align: center;
       padding: 4px;
+      position: relative;
     }
-    .node.locked { background: var(--locked); color: var(--text-muted); }
+    .node::after {
+      content: "";
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      border: 1px solid transparent;
+      pointer-events: none;
+    }
+    .node.locked { background: var(--locked); color: var(--text-muted); border-color: var(--gold-dim); }
     .node.unlockable { border-color: var(--edge-unlockable); background: transparent; color: var(--edge-unlockable); }
-    .node.invested { background: var(--fill-invested); border-color: var(--gold); }
-    .node.max { background: var(--fill-invested); border-color: var(--glow-max); box-shadow: 0 0 var(--glow-blur) var(--glow-max); }
-    .node.capstone { width: var(--capstone-size); height: var(--capstone-size); border-color: var(--capstone-rim); }
-    .disclaimer { grid-column: 1 / -1; color: var(--text-muted); font-size: 12px; }
+    .node.invested { background: var(--fill-invested); border-color: var(--gold); color: var(--text-primary); }
+    .node.max {
+      background: var(--fill-invested);
+      border-color: var(--glow-max);
+      box-shadow: 0 0 var(--glow-blur) var(--glow-max);
+      color: var(--text-primary);
+    }
+    .node.softlock { background: var(--soft-locked); border-color: var(--accent-blood); color: var(--text-muted); }
+    .node.capstone {
+      width: var(--capstone-size);
+      height: var(--capstone-size);
+      border-color: var(--capstone-rim);
+      box-shadow: 0 0 12px var(--accent-crimson), 0 0 24px var(--glow-max);
+    }
+    .swatches {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;
+    }
+    .swatch {
+      width: 36px; height: 36px; border-radius: 4px;
+      border: 1px solid var(--gold-dim);
+      title: "";
+    }
+    .disclaimer { grid-column: 1 / -1; color: var(--text-muted); font-size: 12px; font-family: system-ui, "Noto Sans TC", sans-serif; }
+    .label { font-family: system-ui, "Noto Sans TC", sans-serif; font-size: 11px; color: var(--text-muted); margin: 0 0 8px; }
   </style>
 </head>
 <body>
   <div class="shell">
     <aside class="panel tabs">
+      <p class="label">Tabs</p>
       <button type="button" data-tab="perception" class="active">Perception</button>
       <button type="button" data-tab="execution">Execution</button>
       <button type="button" data-tab="governance">Governance</button>
+      <p class="label" style="margin-top:16px">Palette</p>
+      <div class="swatches" aria-hidden="true">
+        <div class="swatch" style="background:var(--bg-deep)" title="bg-deep"></div>
+        <div class="swatch" style="background:var(--gold)" title="rust gold"></div>
+        <div class="swatch" style="background:var(--accent-blood)" title="blood-brown"></div>
+        <div class="swatch" style="background:var(--accent-crimson)" title="crimson"></div>
+        <div class="swatch" style="background:var(--fill-invested)" title="emerald invested"></div>
+      </div>
     </aside>
     <main class="panel canvas">
       <div class="nodes" id="nodes">
         <div class="node locked">Locked</div>
         <div class="node unlockable">Unlockable</div>
-        <div class="node invested">Rank ≥1</div>
+        <div class="node invested">Invested</div>
         <div class="node max">Max</div>
+        <div class="node softlock">Prereq</div>
         <div class="node invested capstone">Capstone</div>
       </div>
     </main>
     <aside class="panel">
       <strong>Policy inspector</strong>
-      <p style="color: var(--text-muted); font-size: 13px;">M0 stub — compiled AgentPolicy readback lands with live Host.</p>
+      <p style="color: var(--text-muted); font-size: 13px; font-family: system-ui, sans-serif;">M0 stub — Dark Gothic Fantasy chrome. Geometric icons only; no third-party game IP.</p>
     </aside>
     <p class="disclaimer">
-      Inspired by classic ARPG skill trees. Original chrome &amp; tokens — not affiliated with any game studio or LLM vendor.
+      Inspired by classic ARPG skill trees. Original chrome &amp; tokens locked to gothic-panel／mood preview — not affiliated with any game studio or LLM vendor.
     </p>
   </div>
   <script>

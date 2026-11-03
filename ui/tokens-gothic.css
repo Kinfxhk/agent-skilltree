@@ -1,0 +1,51 @@
+/* agent-skilltree · Dark Gothic Fantasy tokens
+   Locked 2026-11-03 to:
+   gothic-panel-preview.jpg · gothic-mood-preview.jpg
+   Charcoal stone / rust gold / blood-brown / crimson rim / emerald invested.
+   Original palette — not CandleDrill (#f2a93b/#11151c) / Vest brand / Blizzard IP. */
+:root {
+  /* Surfaces — charcoal stone crypt */
+  --bg-deep: #0a0908;
+  --bg-panel: #141210;
+  --parchment: #2c2418;
+  --stone: #2e2a26;
+  --iron: #3a3530;
+
+  /* Metal — tarnished / rust gold */
+  --gold: #9a7838;
+  --gold-dim: #6b5330;
+  --capstone-rim: #c4a04a;
+  --connector: #4a4038; /* iron chain */
+
+  /* Accents — blood-brown + crimson edge */
+  --accent-blood: #5c2a22;
+  --accent-crimson: #a02828;
+  --accent-magenta: #7a2858; /* candle / mood only */
+
+  /* Node states */
+  --edge-unlockable: #b8924a;
+  --fill-invested: #2f8f55; /* emerald — locked from panel preview */
+  --glow-max: #6ad89a;
+  --locked: #3a3835;
+  --soft-locked: #4a4540;
+
+  /* Semantic */
+  --danger: #8b1e1e;
+  --ok: #2f8f55;
+
+  /* Tabs — gothic family */
+  --tab-perception: #6a5a8a; /* cold violet-iron */
+  --tab-execution: #9a6830;  /* rust ember */
+  --tab-governance: #8a3a3a; /* seal crimson */
+
+  /* Text */
+  --text-primary: #e6dcc4;
+  --text-muted: #8a8070;
+  --text-inverse: #100e0c;
+
+  /* Derived */
+  --rim-width: 2px;
+  --node-size: 64px;
+  --capstone-size: 88px;
+  --glow-blur: 20px;
+}
