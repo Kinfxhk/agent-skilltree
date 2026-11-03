@@ -152,12 +152,22 @@ describe('domain packs', () => {
 });
 
 describe('tool guard', () => {
-  it('denies locked sensitive tools and Windows paths on POSIX', () => {
+  it('denies locked sensitive tools and shell without consent', () => {
     const guard = createToolGuard(() => emptyState(0));
     expect(guard({ name: 'email_send' })).toContain('not unlocked');
-    expect(guard({ name: 'bash', arguments: { command: String.raw`copy C:\\a\\b.txt /tmp` } }))
-      .toContain('windows_path_on_posix');
+    expect(guard({ name: 'bash', arguments: { command: 'ls /tmp' } })).toContain('shell is not permitted');
+    expect(guard({ name: 'write' })).toContain('file writes are not permitted');
+    expect(guard({ name: 'subagent' })).toContain('subagents are not permitted');
+  });
+
+  it('allows shell after consent and still denies Windows paths on POSIX', () => {
+    let state = createEmptyState(10);
+    state = allocate(state, 'gov.consent.write', 'human');
+    state = allocate(state, 'gov.consent.shell', 'human');
+    const guard = createToolGuard(() => state);
     expect(guard({ name: 'bash', arguments: { command: 'ls /tmp' } })).toBeUndefined();
+    expect(guard({ name: 'bash', arguments: { command: 'copy C:\\a\\b.txt /tmp' } }))
+      .toContain('windows_path_on_posix');
   });
 });
 

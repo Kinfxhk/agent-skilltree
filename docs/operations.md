@@ -11,7 +11,7 @@
 ```bash
 npm ci
 npm run build
-npm test          # 19 tests
+npm test          # 20 tests
 npm run check     # build + test + required files + secret scan
 npm run ui:data   # generate ui/nodes.js from skills/mvp-36.yaml
 ```
@@ -129,11 +129,11 @@ npm run ui:serve
 
 ## 8. What to verify after a change
 
-1. `npm run check` is green (19 tests).
+1. `npm run check` is green (20 tests).
 2. `npm run skilltree -- preset solo-dev` → `toolAsk` contains `patch`/`release`.
 3. `npm run skilltree -- preset personal-assistant` → `toolAsk` contains `email_send`/`calendar_write`.
-4. Fake host: registered tools are `skilltree_inspect` / `skilltree_export`; guard rejects `email_send`
-   and `copy C:\...`; `ls /tmp` passes.
+4. Fake host: registered tools are `skilltree_inspect` / `skilltree_export`; guard rejects `email_send`,
+   `copy C:\...`, and `bash` when Shell Consent is locked; after `preset ops-squad`, `ls /tmp` passes.
 5. DSH `--dump-config` has `agent-skilltree`; `--help` loads.
 6. UI: click a `READY` node → inspector; Allocate decrements points; footer says `State: file`.
 
@@ -148,6 +148,8 @@ npm run ui:serve
 | UI says `State: localStorage` | You opened it with a static server; use `npm run ui:serve` |
 | Port 8780 busy | `SKILLTREE_UI_PORT=8781 npm run ui:serve` |
 | Guard too strict | Inspect `policy.toolDeny`; allocate the matching node or adjust the preset |
+| `bash` refused with `shell is not permitted` | Shell Consent is locked; run `preset ops-squad` or allocate `gov.consent.shell` |
+| `write` refused with `write access is not permitted` | File Write Consent is locked; allocate `gov.consent.write` |
 
 ## 10. Safety
 

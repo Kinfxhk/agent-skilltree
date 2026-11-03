@@ -1,8 +1,5 @@
 # agent-skilltree
 
-
-**[☕ Buy Me a Coffee](https://buymeacoffee.com/kinfxhk)** · [GitHub Sponsors](https://github.com/sponsors/Kinfxhk)
-
 **Status: M1 — policy-first skill tree for DeepSeek Harness (DSH).**
 
 Allocate human-granted **skill points** across Development, Research and Personal Assistant nodes;
@@ -71,7 +68,7 @@ agent is for — not just which nodes are lit. Details: [`docs/operations.md`](d
 
 ```bash
 npm ci
-npm run check                 # build + 19 vitest + hygiene/secret fallback
+npm run check                 # build + 20 vitest + hygiene/secret fallback
 npm run ui:data               # generate ui/nodes.js from the YAML catalog
 npm run skilltree -- presets  # list human builds
 npm run skilltree -- preset solo-dev
@@ -98,7 +95,7 @@ or a registry install for production. See [`docs/operations.md`](docs/operations
 
 | Layer | Status |
 |---|---|
-| `PolicyCompiler` (SkillTreeState → AgentPolicy) | ✅ real; 19 tests |
+| `PolicyCompiler` (SkillTreeState → AgentPolicy) | ✅ real; 20 tests |
 | `pathHygieneCheck` (Path Hygiene + Shell Dialect; allow/deny/ask; never rewrites argv) | ✅ real |
 | `ctx.tools.guard` (path hygiene + locked sensitive tools) | ✅ real; **live DSH task refused `copy C:\...`** |
 | `skilltree_inspect` / `skilltree_export` | ✅ executable read-only tools; **live inspect verified** |
@@ -106,7 +103,7 @@ or a registry install for production. See [`docs/operations.md`](docs/operations
 | Persistent state shared by CLI / UI / plugin | ✅ real |
 | Interactive grimdark UI | ✅ static HTML/JS; Grok Imagine art |
 | `ask` approval flow | ❌ M1 treats `ask` as deny |
-| turnCap / subagent / sandbox runtime enforcement | ❌ compiled into policy, not yet enforced |
+| turnCap / subagent / sandbox runtime enforcement | ⚠️ partial: shell/write/subagent denial + sandbox floor are enforced by the guard; turnCap and active-subagent count are not |
 | Cordis client UI / product Gateway | ❌ later |
 
 ## Verified end-to-end
@@ -114,6 +111,11 @@ or a registry install for production. See [`docs/operations.md`](docs/operations
 With `DEEPSEEK_API_KEY` in the launching environment and the `skilltree-test` profile:
 
 ```text
+Default tree:
+Use the bash tool to run exactly: printf SKILLTREE_OK
+→ refused: "skilltree: shell is not permitted by the current policy. Allocate Shell Consent first."
+
+After `npm run skilltree -- preset ops-squad` (Shell Consent unlocked):
 Use the bash tool to run exactly: printf SKILLTREE_OK
 → The command ran successfully with exit code 0. Output: SKILLTREE_OK
 
@@ -125,8 +127,9 @@ Use the skilltree_inspect tool and report policy.toolDeny
 → ["email_send", "calendar_write"]
 ```
 
-This proves the plugin is mounted, the read-only tool executes, and the guard blocks a real
-policy-violating command in a live agent turn. `ask` approval is still M2 (see `docs/m1-limits.md`).
+This proves the plugin is mounted, the read-only tool executes, shell is denied without consent,
+allowed after `ops-squad`, and a policy-violating path is blocked in a live agent turn. `ask`
+approval is still M2 (see `docs/m1-limits.md`).
 
 ## UI
 

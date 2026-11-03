@@ -36,6 +36,35 @@ export function apply(ctx = {}) {
                 return JSON.stringify(inspect(currentState()), null, 2);
             },
         });
+        if (process.env.SKILLTREE_DEBUG === '1')
+            register({
+                name: 'skilltree_tools',
+                description: 'Diagnostic: list the tools visible to this agent and the execution context keys.',
+                parameters: {},
+                output: textOutput,
+                async execute(_args, exec) {
+                    const anyCtx = ctx;
+                    const agent = exec?.agent;
+                    const schemas = anyCtx.tools?.schemas?.(agent) ?? [];
+                    const selected = new Set(['bash', 'write', 'edit', 'subagent', 'subagent_fork']);
+                    const focus = schemas.filter((schema) => selected.has(String(schema.name)));
+                    const anyAgent = agent ?? {};
+                    return JSON.stringify({
+                        tools: schemas.map((schema) => schema.name).filter(Boolean).sort(),
+                        focus: focus.map((schema) => ({
+                            name: schema.name,
+                            description: schema.description,
+                            parameters: schema.parameters,
+                        })),
+                        execKeys: Object.keys(exec ?? {}).sort(),
+                        agentKeys: Object.keys(agent ?? {}).sort(),
+                        loopCtxKeys: Object.keys(anyAgent.loopCtx ?? {}).sort(),
+                        optionsKeys: Object.keys(anyAgent.options ?? {}).sort(),
+                        runtimeContextKeys: Object.keys(anyAgent.runtimeContext ?? {}).sort(),
+                        sessionKeys: Object.keys(anyAgent.session ?? {}).sort(),
+                    }, null, 2);
+                },
+            });
         register({
             name: 'skilltree_export',
             description: 'Export SkillTreeState + AgentPolicy manifest (read-only).',

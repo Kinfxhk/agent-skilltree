@@ -68,6 +68,35 @@ export function apply(ctx: LooseCtx = {}): void {
       },
     });
 
+    if (process.env.SKILLTREE_DEBUG === '1') register({
+      name: 'skilltree_tools',
+      description: 'Diagnostic: list the tools visible to this agent and the execution context keys.',
+      parameters: {},
+      output: textOutput,
+      async execute(_args, exec) {
+        const anyCtx = ctx as unknown as { tools?: { schemas?: (agent: unknown) => Array<{ name?: string }> } };
+        const agent = (exec as { agent?: unknown } | undefined)?.agent;
+        const schemas = anyCtx.tools?.schemas?.(agent) ?? [];
+        const selected = new Set(['bash', 'write', 'edit', 'subagent', 'subagent_fork']);
+        const focus = schemas.filter((schema) => selected.has(String(schema.name)));
+        const anyAgent = (agent as { loopCtx?: object; options?: object; runtimeContext?: object; session?: object }) ?? {};
+        return JSON.stringify({
+          tools: schemas.map((schema) => schema.name).filter(Boolean).sort(),
+          focus: focus.map((schema) => ({
+            name: schema.name,
+            description: (schema as { description?: string }).description,
+            parameters: (schema as { parameters?: unknown }).parameters,
+          })),
+          execKeys: Object.keys((exec as object) ?? {}).sort(),
+          agentKeys: Object.keys((agent as object) ?? {}).sort(),
+          loopCtxKeys: Object.keys(anyAgent.loopCtx ?? {}).sort(),
+          optionsKeys: Object.keys(anyAgent.options ?? {}).sort(),
+          runtimeContextKeys: Object.keys(anyAgent.runtimeContext ?? {}).sort(),
+          sessionKeys: Object.keys(anyAgent.session ?? {}).sort(),
+        }, null, 2);
+      },
+    });
+
     register({
       name: 'skilltree_export',
       description: 'Export SkillTreeState + AgentPolicy manifest (read-only).',

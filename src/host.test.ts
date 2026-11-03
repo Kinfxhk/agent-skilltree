@@ -3,10 +3,11 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { apply } from './index.js';
+import { allocate, apply, createEmptyState } from './index.js';
+import { createToolGuard } from './guard.js';
 
 type Tool = { name: string; execute: (args: Record<string, unknown>, exec: unknown) => Promise<string> };
-type Guard = (exec: { name?: string; command?: string; arguments?: { command?: string } }) => string | undefined;
+type Guard = (exec: { name?: string; command?: string; arguments?: Record<string, unknown> }) => string | undefined;
 
 describe('DSH host half', () => {
   let dir = '';
@@ -42,8 +43,16 @@ describe('DSH host half', () => {
 
     expect(guard).toBeDefined();
     expect(guard!({ name: 'email_send' })).toContain('not unlocked');
-    expect(guard!({ name: 'bash', arguments: { command: String.raw`copy C:\\a\\b.txt /tmp` } }))
+    expect(guard!({ name: 'bash', arguments: { command: 'ls /tmp' } })).toContain('shell is not permitted');
+    expect(guard!({ name: 'write', arguments: { file_path: '/tmp/x' } })).toContain('file writes are not permitted');
+    expect(guard!({ name: 'subagent' })).toContain('subagents are not permitted');
+
+    let unlocked = createEmptyState(10);
+    unlocked = allocate(unlocked, 'gov.consent.write', 'human');
+    unlocked = allocate(unlocked, 'gov.consent.shell', 'human');
+    const allowed = createToolGuard(() => unlocked);
+    expect(allowed({ name: 'bash', arguments: { command: 'ls /tmp' } })).toBeUndefined();
+    expect(allowed({ name: 'bash', arguments: { command: String.raw`copy C:\\a\\b.txt /tmp` } }))
       .toContain('windows_path_on_posix');
-    expect(guard!({ name: 'bash', arguments: { command: 'ls /tmp' } })).toBeUndefined();
   });
 });

@@ -13,8 +13,9 @@ line honest.
 - `skilltree_inspect` / `skilltree_export`: executable, read-only.
 - Human CLI: `grant`, `allocate`, `respec`, `preset`, `status`, `export`.
 - Persistent state: `~/.dsh/skilltree-state.json`, shared by CLI / UI server / plugin.
-- 19 vitest tests + `npm run check` green; DSH `skilltree-test` profile loads.
-- Live DSH task: `printf SKILLTREE_OK` ran; `copy C:\\...` was refused by the guard; `skilltree_inspect` returned `toolDeny`.
+- 20 vitest tests + `npm run check` green; DSH `skilltree-test` profile loads.
+- Live DSH tasks: default policy refused `printf` (shell not permitted); after `preset ops-squad` the same command ran; `copy C:\\...` was refused by the guard; `skilltree_inspect` returned `toolDeny`.
+- `ctx.tools.guard` also gates built-in `bash`/`write`/`subagent` against `approvalShell`/`approvalWrite`/`subagentsMaxDepth` and enforces the sandbox floor.
 - Cordis `inject: ['tools']` and host-safe tool names (`skilltree_inspect`, `skilltree_export`; DSH rejects dots).
 
 ## Not real yet
@@ -22,7 +23,7 @@ line honest.
 | Gap | Consequence |
 |---|---|
 | `ask` approval flow | Guard treats `ask` as deny; the user cannot approve a call in-flow |
-| turnCap / subagent depth / sandbox floor | Compiled into `AgentPolicy`, but not enforced by a runtime hook |
+| turnCap / active-subagent count | Compiled into `AgentPolicy`, but not enforced; subagent calls are only gated when `subagentsMaxDepth` is 0 |
 | Cordis client UI | `ui/preview.html` is static HTML/JS, not a mounted DSH client plugin |
 | UI vs CLI state | M1 UI server shares the file; the standalone `python3 -m http.server` fallback uses localStorage |
 | Public install | No npm registry package yet; local path/link only |
@@ -39,7 +40,7 @@ line honest.
 ## Next (M2)
 
 1. Wire DSH approval service so `ask` becomes a real approval, not a deny.
-2. Enforce `turnCap`, subagent depth and sandbox floor in the host runtime.
-3. Run a live task with a test key and prove a denied command never executes.
+2. Enforce `turnCap` and active-subagent count in the host runtime (shell/write/subagent denial and sandbox floor are already guarded).
+3. Run a live task with a test key and prove an `ask` command never executes without approval.
 4. Mount the UI as a Cordis client plugin, with state through the host store.
 5. Publish a registry install path and a migration from linked installs.
