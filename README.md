@@ -1,7 +1,5 @@
 # agent-skilltree
 
-**[☕ Buy Me a Coffee](https://buymeacoffee.com/kinfxhk)** · [GitHub Sponsors](https://github.com/sponsors/Kinfxhk)
-
 **Status: M1 — policy-first skill tree for DeepSeek Harness (DSH).**
 
 Allocate human-granted **skill points** across Development, Research and Personal Assistant nodes;
@@ -137,6 +135,9 @@ approval is still M2 (see `docs/m1-limits.md`).
 
 - `ui/preview.html` — interactive tree: 5 domain tabs, state badges (`READY` / `LOCK` / `PREREQ` / `✓`),
   prerequisite edges, inspector, allocate/respec/export.
+- **Feel**: synthesized WebAudio cues (allocate chime, deny thud, respec sweep, preset chord) with a
+  `SFX` toggle; node pop, point-count pulse, deny shake; optional `navigator.vibrate` / WebView haptic
+  bridge. No audio assets to download; respects mute.
 - `npm run ui:serve` — local server on `127.0.0.1:8780`, with `GET/POST /api/state` so the UI writes the
   same `skilltree-state.json` as the CLI and plugin.
 - Art: `ui/assets/background-grimdark.png`, `node-frame.png`, `sigils.png` — generated with **Grok
