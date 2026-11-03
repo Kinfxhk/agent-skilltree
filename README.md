@@ -7,7 +7,7 @@ a **PolicyCompiler** turns the resulting `SkillTreeState` into an `AgentPolicy`;
 `ctx.tools.guard` enforces path hygiene and locked sensitive tools. The agent can only inspect and
 export — it can never allocate its own permissions.
 
-![agent-skilltree running as a DSH plugin](ui/preview-dsh.png)
+![agent-skilltree running as a DSH plugin](ui/preview-dsh-en.png)
 
 Host pin: `@deepseek-ai/dsh@0.2.1-rc.5`. Public name: `agent-skilltree`. MIT. No secrets in repo.
 
@@ -114,7 +114,8 @@ or a registry install for production. See [`docs/operations.md`](docs/operations
   same `skilltree-state.json` as the CLI and plugin.
 - Art: `ui/assets/background-grimdark.png`, `node-frame.png`, `sigils.png` — generated with **Grok
   Imagine** (xAI), original, no third-party IP.
-- Composite preview: `ui/preview-dsh.png` (DSH shell blurred behind the plugin UI; no usage text readable).
+- Composite preview: `ui/preview-dsh-en.png` (English; DSH shell blurred behind the plugin UI; no usage text readable).
+- Chinese preview: `ui/preview-dsh.png`. The UI follows the DSH/browser language; `?lang=en` / `?lang=zh` overrides.
 
 ## Documentation
 

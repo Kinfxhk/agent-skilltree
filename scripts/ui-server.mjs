@@ -50,7 +50,7 @@ function safeStatic(pathname) {
 const server = createServer(async (req, res) => {
   try {
     if (req.method === 'GET' && req.url === '/api/health') {
-      return json(res, 200, { ok: true, statePath: STATE_PATH });
+      return json(res, 200, { ok: true, statePath: STATE_PATH, locale: process.env.SKILLTREE_LOCALE || process.env.LC_ALL || process.env.LANG || null });
     }
     if (req.method === 'GET' && req.url === '/api/state') {
       return json(res, 200, { state: loadState(STATE_PATH), statePath: STATE_PATH });
