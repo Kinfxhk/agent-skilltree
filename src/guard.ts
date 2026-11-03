@@ -32,7 +32,7 @@ export function createToolGuard(
     if ((builtin === 'write' || builtin === 'edit') && policy.approvalWrite === 'deny') {
       return 'skilltree: file writes are not permitted by the current policy. Allocate Write Consent first.';
     }
-    if ((builtin === 'subagent' || builtin === 'subagent_fork') && policy.subagentsMaxDepth <= 0) {
+    if ((builtin === 'subagent' || builtin === 'subagent_fork') && (policy.subagentsMaxDepth <= 0 || policy.subagentsMaxActive <= 0)) {
       return 'skilltree: subagents are not permitted by the current policy. Allocate Subagent Summon first.';
     }
 

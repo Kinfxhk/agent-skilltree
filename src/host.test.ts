@@ -5,6 +5,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { allocate, apply, createEmptyState } from './index.js';
 import { createToolGuard } from './guard.js';
+import { saveState } from './state-store.js';
 
 type Tool = { name: string; execute: (args: Record<string, unknown>, exec: unknown) => Promise<string> };
 type Guard = (exec: { name?: string; command?: string; arguments?: Record<string, unknown> }) => string | undefined;
@@ -28,12 +29,13 @@ describe('DSH host half', () => {
   it('registers read-only tools and a real guard', async () => {
     const tools: Tool[] = [];
     let guard: Guard | undefined;
+    let pre: ((call: unknown) => unknown) | undefined;
     apply({
       tools: {
         register: (def) => tools.push(def as Tool),
         guard: (fn) => { guard = fn as Guard; },
       },
-      on: () => {},
+      on: (event, fn) => { if (event === 'tools/pre-execute') pre = fn; },
     });
 
     expect(tools.map((t) => t.name)).toEqual(['skilltree_inspect', 'skilltree_export']);
@@ -54,5 +56,10 @@ describe('DSH host half', () => {
     expect(allowed({ name: 'bash', arguments: { command: 'ls /tmp' } })).toBeUndefined();
     expect(allowed({ name: 'bash', arguments: { command: String.raw`copy C:\\a\\b.txt /tmp` } }))
       .toContain('windows_path_on_posix');
+
+    expect(pre).toBeDefined();
+    expect(pre!({ name: 'bash', arguments: { command: 'ls /tmp' } })).toMatchObject({ kind: 'deny' });
+    saveState(unlocked, process.env.SKILLTREE_STATE);
+    expect(pre!({ name: 'bash', arguments: { command: 'ls /tmp' } })).toMatchObject({ kind: 'ask' });
   });
 });

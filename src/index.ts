@@ -118,11 +118,22 @@ export function apply(ctx: LooseCtx = {}): void {
     ctx.tools.guard(guard);
   }
 
-  // Fallback for hosts that only expose the pre-execute event. Never mutate argv.
+  // DSH pre-execute is a waterfall: return {kind:'ask'} and the host runs its
+  // own approval card (ctx.get('approval')). This is the real M2 approval seam.
   if (typeof ctx.on === 'function') {
     ctx.on('tools/pre-execute', (...args: unknown[]) => {
-      const reason = guard((args[0] ?? {}) as ToolExecution);
-      return reason ? { decision: 'deny', reason } : { decision: 'allow' };
+      const call = (args[0] ?? {}) as ToolExecution;
+      const reason = guard(call);
+      if (reason) return { kind: 'deny', reason };
+
+      const policy = new PolicyCompiler().compile(currentState(), detectOsProfile());
+      if (call.name === 'bash' && policy.approvalShell === 'ask') {
+        return { kind: 'ask', reason: 'Allow this shell command under the current skill tree?' };
+      }
+      if ((call.name === 'write' || call.name === 'edit') && policy.approvalWrite === 'ask') {
+        return { kind: 'ask', reason: 'Allow this file write under the current skill tree?' };
+      }
+      return { kind: 'allow' };
     });
   }
 }

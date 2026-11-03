@@ -102,7 +102,7 @@ or a registry install for production. See [`docs/operations.md`](docs/operations
 | Human CLI `grant` / `allocate` / `respec` / `preset` | ✅ real |
 | Persistent state shared by CLI / UI / plugin | ✅ real |
 | Interactive grimdark UI | ✅ static HTML/JS; Grok Imagine art |
-| `ask` approval flow | ❌ M1 treats `ask` as deny |
+| `ask` approval flow | ✅ pre-execute returns `{kind:'ask'}`; DSH runs its approval card. Headless has no channel, so it denies. |
 | turnCap / subagent / sandbox runtime enforcement | ⚠️ partial: shell/write/subagent denial + sandbox floor are enforced by the guard; turnCap and active-subagent count are not |
 | Cordis client UI / product Gateway | ❌ later |
 
@@ -115,9 +115,10 @@ Default tree:
 Use the bash tool to run exactly: printf SKILLTREE_OK
 → refused: "skilltree: shell is not permitted by the current policy. Allocate Shell Consent first."
 
-After `npm run skilltree -- preset ops-squad` (Shell Consent unlocked):
+After `npm run skilltree -- preset ops-squad` (Shell Consent unlocked, approval = ask):
 Use the bash tool to run exactly: printf SKILLTREE_OK
-→ The command ran successfully with exit code 0. Output: SKILLTREE_OK
+→ approval requested; headless has no approval channel, so the command does NOT run
+  (in the DSH web UI the approval card is shown; Allow once → runs, Reject → denied)
 
 Use the bash tool to run exactly: copy C:\foo\bar.txt D:\x.txt
 → refused before bash: "skilltree: windows_path_on_posix"
@@ -128,8 +129,7 @@ Use the skilltree_inspect tool and report policy.toolDeny
 ```
 
 This proves the plugin is mounted, the read-only tool executes, shell is denied without consent,
-allowed after `ops-squad`, and a policy-violating path is blocked in a live agent turn. `ask`
-approval is still M2 (see `docs/m1-limits.md`).
+`ask` reaches DSH's approval waterfall, and a policy-violating path is blocked in a live agent turn.
 
 ## UI
 

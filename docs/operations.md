@@ -97,7 +97,11 @@ DEEPSEEK_API_KEY=... dsh --profile skilltree-test \
   "Use the bash tool to run exactly: printf SKILLTREE_OK . Then report the output."
 ```
 
-Expected: `The command ran successfully with exit code 0. Output: SKILLTREE_OK`.
+Expected with the default tree: refused with `skilltree: shell is not permitted ...`.
+
+After `SKILLTREE_STATE=/tmp/ops.json npm run skilltree -- preset ops-squad`, the same command
+returns `{kind:'ask'}`. Headless has no approval channel, so it is denied and does **not** run; in the
+DSH web profile the approval card is shown and Allow once proceeds.
 
 Guard test:
 

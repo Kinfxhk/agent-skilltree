@@ -49,7 +49,10 @@ export function apply(ctx = {}) {
                     const selected = new Set(['bash', 'write', 'edit', 'subagent', 'subagent_fork']);
                     const focus = schemas.filter((schema) => selected.has(String(schema.name)));
                     const anyAgent = agent ?? {};
+                    const anyCtxWithGet = ctx;
+                    const approval = anyCtxWithGet.get?.('approval') ?? anyCtxWithGet.approval;
                     return JSON.stringify({
+                        approvalService: typeof approval?.request,
                         tools: schemas.map((schema) => schema.name).filter(Boolean).sort(),
                         focus: focus.map((schema) => ({
                             name: schema.name,
@@ -80,11 +83,22 @@ export function apply(ctx = {}) {
     if (typeof ctx.tools?.guard === 'function') {
         ctx.tools.guard(guard);
     }
-    // Fallback for hosts that only expose the pre-execute event. Never mutate argv.
+    // DSH pre-execute is a waterfall: return {kind:'ask'} and the host runs its
+    // own approval card (ctx.get('approval')). This is the real M2 approval seam.
     if (typeof ctx.on === 'function') {
         ctx.on('tools/pre-execute', (...args) => {
-            const reason = guard((args[0] ?? {}));
-            return reason ? { decision: 'deny', reason } : { decision: 'allow' };
+            const call = (args[0] ?? {});
+            const reason = guard(call);
+            if (reason)
+                return { kind: 'deny', reason };
+            const policy = new PolicyCompiler().compile(currentState(), detectOsProfile());
+            if (call.name === 'bash' && policy.approvalShell === 'ask') {
+                return { kind: 'ask', reason: 'Allow this shell command under the current skill tree?' };
+            }
+            if ((call.name === 'write' || call.name === 'edit') && policy.approvalWrite === 'ask') {
+                return { kind: 'ask', reason: 'Allow this file write under the current skill tree?' };
+            }
+            return { kind: 'allow' };
         });
     }
 }
