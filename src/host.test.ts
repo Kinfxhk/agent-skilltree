@@ -6,6 +6,7 @@ import { join } from 'node:path';
 import { allocate, apply, createEmptyState } from './index.js';
 import { createToolGuard } from './guard.js';
 import { saveState } from './state-store.js';
+import { applyPreset, getPreset } from './presets.js';
 
 type Tool = { name: string; execute: (args: Record<string, unknown>, exec: unknown) => Promise<string> };
 type Guard = (exec: { name?: string; command?: string; arguments?: Record<string, unknown> }) => string | undefined;
@@ -30,12 +31,13 @@ describe('DSH host half', () => {
     const tools: Tool[] = [];
     let guard: Guard | undefined;
     let pre: ((call: unknown) => unknown) | undefined;
+    let post: ((...args: unknown[]) => unknown) | undefined;
     apply({
       tools: {
         register: (def) => tools.push(def as Tool),
         guard: (fn) => { guard = fn as Guard; },
       },
-      on: (event, fn) => { if (event === 'tools/pre-execute') pre = fn; },
+      on: (event, fn) => { if (event === 'tools/pre-execute') pre = fn; if (event === 'tools/post-execute') post = fn; },
     });
 
     expect(tools.map((t) => t.name)).toEqual(['skilltree_inspect', 'skilltree_export']);
@@ -61,5 +63,16 @@ describe('DSH host half', () => {
     expect(pre!({ name: 'bash', arguments: { command: 'ls /tmp' } })).toMatchObject({ kind: 'deny' });
     saveState(unlocked, process.env.SKILLTREE_STATE);
     expect(pre!({ name: 'bash', arguments: { command: 'ls /tmp' } })).toMatchObject({ kind: 'ask' });
+
+    const ops = applyPreset(getPreset('ops-squad'));
+    saveState(ops, process.env.SKILLTREE_STATE);
+    const sub = { name: 'subagent', agent: { session: { id: 'test-session' } } };
+    expect(pre!(sub)).toMatchObject({ kind: 'allow' });
+    expect(pre!(sub)).toMatchObject({ kind: 'allow' });
+    expect(pre!(sub)).toMatchObject({ kind: 'allow' });
+    expect(pre!(sub)).toMatchObject({ kind: 'deny' });
+    expect(post).toBeDefined();
+    post!(sub, {}, () => ({ kind: 'accept' }));
+    expect(pre!(sub)).toMatchObject({ kind: 'allow' });
   });
 });

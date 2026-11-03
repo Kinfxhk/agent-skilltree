@@ -17,13 +17,14 @@ line honest.
 - Live DSH tasks: default policy refused `printf` (shell not permitted); after `preset ops-squad` the same command ran; `copy C:\\...` was refused by the guard; `skilltree_inspect` returned `toolDeny`.
 - `ctx.tools.guard` also gates built-in `bash`/`write`/`subagent` against `approvalShell`/`approvalWrite`/`subagentsMaxDepth` and enforces the sandbox floor.
 - `tools/pre-execute` waterfall returns `{kind:'ask'}`; DSH's `serviceAsk` runs the host approval card. Live headless task confirmed the command does not run when no approval channel is available.
+- Active-subagent count is tracked across `tools/pre-execute` / `tools/post-execute` and denied at `subagentsMaxActive`; unit test covers 3 allows → deny → post decrement → allow.
 - Cordis `inject: ['tools']` and host-safe tool names (`skilltree_inspect`, `skilltree_export`; DSH rejects dots).
 
 ## Not real yet
 
 | Gap | Consequence |
 |---|---|
-| turnCap / active-subagent count | Compiled into `AgentPolicy`, but not enforced; subagent calls are only gated when `subagentsMaxDepth` is 0 |
+| turnCap | No DSH runtime field; not enforceable in this host |
 | Cordis client UI | `ui/preview.html` is static HTML/JS, not a mounted DSH client plugin |
 | UI vs CLI state | M1 UI server shares the file; the standalone `python3 -m http.server` fallback uses localStorage |
 | Public install | No npm registry package yet; local path/link only |
@@ -40,7 +41,7 @@ line honest.
 ## Next (M2)
 
 1. Test the `ask` approval card in the DSH **web** profile (headless has no channel).
-2. Enforce `turnCap` and active-subagent count in the host runtime (shell/write/subagent denial and sandbox floor are already guarded).
+2. Decide how to handle `turnCap` without a DSH runtime field (product-level only).
 3. Run a live task with a test key and prove an `ask` command never executes without approval.
 4. Mount the UI as a Cordis client plugin, with state through the host store.
 5. Publish a registry install path and a migration from linked installs.

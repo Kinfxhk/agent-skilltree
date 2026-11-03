@@ -27,6 +27,11 @@ import type { SkillTreeState } from './types.js';
 export const inject: string[] = ['tools'];
 
 export const name = 'agent-skilltree';
+const activeSubagents = new Map<string, number>();
+
+function sessionKey(exec: ToolExecution & { agent?: { id?: string; session?: { id?: string } } }): string {
+  return String(exec.agent?.session?.id ?? exec.agent?.id ?? 'global');
+}
 
 type ToolDef = {
   name: string;
@@ -135,7 +140,26 @@ export function apply(ctx: LooseCtx = {}): void {
       if ((call.name === 'write' || call.name === 'edit') && policy.approvalWrite === 'ask') {
         return { kind: 'ask', reason: 'Allow this file write under the current skill tree?' };
       }
+      if (call.name === 'subagent' || call.name === 'subagent_fork') {
+        const key = sessionKey(call as ToolExecution & { agent?: { id?: string; session?: { id?: string } } });
+        const active = activeSubagents.get(key) ?? 0;
+        if (policy.subagentsMaxActive > 0 && active >= policy.subagentsMaxActive) {
+          return { kind: 'deny', reason: 'skilltree: active subagent limit reached.' };
+        }
+        activeSubagents.set(key, active + 1);
+      }
       return { kind: 'allow' };
+    });
+    ctx.on('tools/post-execute', (...args: unknown[]) => {
+      const call = (args[0] ?? {}) as ToolExecution & { agent?: { id?: string; session?: { id?: string } } };
+      if (call.name === 'subagent' || call.name === 'subagent_fork') {
+        const key = sessionKey(call);
+        const active = activeSubagents.get(key) ?? 0;
+        if (active <= 1) activeSubagents.delete(key);
+        else activeSubagents.set(key, active - 1);
+      }
+      const next = args[2];
+      return typeof next === 'function' ? (next as () => unknown)() : undefined;
     });
   }
 }

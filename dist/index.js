@@ -18,6 +18,10 @@ import { allocate, createEmptyState, exportPolicy, inspect, respec, } from './tr
 /** Cordis requires an explicit inject before ctx.tools can be read. */
 export const inject = ['tools'];
 export const name = 'agent-skilltree';
+const activeSubagents = new Map();
+function sessionKey(exec) {
+    return String(exec.agent?.session?.id ?? exec.agent?.id ?? 'global');
+}
 const textOutput = {
     schema: { type: 'string' },
     render: (_args, value) => [{ type: 'text', text: String(value) }],
@@ -101,7 +105,28 @@ export function apply(ctx = {}) {
             if ((call.name === 'write' || call.name === 'edit') && policy.approvalWrite === 'ask') {
                 return { kind: 'ask', reason: 'Allow this file write under the current skill tree?' };
             }
+            if (call.name === 'subagent' || call.name === 'subagent_fork') {
+                const key = sessionKey(call);
+                const active = activeSubagents.get(key) ?? 0;
+                if (policy.subagentsMaxActive > 0 && active >= policy.subagentsMaxActive) {
+                    return { kind: 'deny', reason: 'skilltree: active subagent limit reached.' };
+                }
+                activeSubagents.set(key, active + 1);
+            }
             return { kind: 'allow' };
+        });
+        ctx.on('tools/post-execute', (...args) => {
+            const call = (args[0] ?? {});
+            if (call.name === 'subagent' || call.name === 'subagent_fork') {
+                const key = sessionKey(call);
+                const active = activeSubagents.get(key) ?? 0;
+                if (active <= 1)
+                    activeSubagents.delete(key);
+                else
+                    activeSubagents.set(key, active - 1);
+            }
+            const next = args[2];
+            return typeof next === 'function' ? next() : undefined;
         });
     }
 }

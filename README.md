@@ -103,7 +103,7 @@ or a registry install for production. See [`docs/operations.md`](docs/operations
 | Persistent state shared by CLI / UI / plugin | ✅ real |
 | Interactive grimdark UI | ✅ static HTML/JS; Grok Imagine art |
 | `ask` approval flow | ✅ pre-execute returns `{kind:'ask'}`; DSH runs its approval card. Headless has no channel, so it denies. |
-| turnCap / subagent / sandbox runtime enforcement | ⚠️ partial: shell/write/subagent denial + sandbox floor are enforced by the guard; turnCap and active-subagent count are not |
+| turnCap / subagent / sandbox runtime enforcement | ⚠️ partial: shell/write/subagent denial, sandbox floor, and active-subagent count (pre/post) are enforced; turnCap is host-unsupported |
 | Cordis client UI / product Gateway | ❌ later |
 
 ## Verified end-to-end
