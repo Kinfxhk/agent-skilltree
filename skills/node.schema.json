@@ -8,6 +8,7 @@
   "properties": {
     "id": { "type": "string", "minLength": 1 },
     "tab": { "type": "string", "enum": ["perception", "execution", "governance"] },
+    "domain": { "type": "string", "enum": ["core", "development", "research", "assistant", "governance"] },
     "name_zh": { "type": "string" },
     "name_en": { "type": "string" },
     "rank": { "type": "integer", "minimum": 1 },

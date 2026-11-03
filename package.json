@@ -38,6 +38,7 @@
     "cordis.patch.yml",
     "dist",
     "skills",
+    "presets",
     "ui",
     "docs",
     "LICENSE",
@@ -48,6 +49,9 @@
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
+    "skilltree": "node scripts/skilltree.mjs",
+    "ui:data": "node scripts/build-ui-data.mjs",
+    "ui:serve": "node scripts/ui-server.mjs",
     "check": "npm run build && npm test && node scripts/check.mjs"
   },
   "dependencies": {

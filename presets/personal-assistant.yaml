@@ -1,0 +1,23 @@
+schema: agent-skilltree/preset/v1
+id: personal-assistant
+title: "Personal Assistant"
+points: 24
+blurb_zh: "私人助理：讀收件匣／日曆、草擬回覆、安排日程；發送要人手批。"
+blurb_en: "Personal assistant: read inbox/calendar, draft replies, schedule; sending needs a human."
+agent_purpose_zh: "Agent 可以讀收件匣與日曆、草擬回覆、提出日程；發送 email 或改日曆前必須人手批准。"
+agent_purpose_en: "The agent may read inbox/calendar, draft replies and propose schedules; sending email or changing the calendar requires human approval."
+requires_human_approval_for: [email_send, calendar_write]
+allocate_order:
+  - gov.soul.base
+  - gov.audit.1
+  - gov.consent.write
+  - gov.consent.network
+  - gov.respec
+  - gov.build_export
+  - perception.assistant.inbox
+  - perception.assistant.calendar
+  - execution.assistant.draft
+  - execution.assistant.send
+  - execution.assistant.schedule
+  - execution.tools.whitelist
+  - execution.call_budget.1

@@ -1,0 +1,33 @@
+schema: agent-skilltree/preset/v1
+id: ops-squad
+title: "Ops Squad"
+points: 32
+blurb_zh: "營運小隊：子代理、並行、Gateway On-Demand，加完整同意／Safety。"
+blurb_en: "Ops squad: subagents, parallel work, gateway on-demand, full consent/safety."
+agent_purpose_zh: "Agent 可以拆出子代理並行處理營運工作；所有寫入／Shell／網絡仍受同意與 Safety 約束。"
+agent_purpose_en: "The agent may fan work out to subagents and run parallel operations; every write, shell and network action remains under consent and safety."
+requires_human_approval_for: [shell, write, network]
+allocate_order:
+  - gov.soul.base
+  - gov.soul.exp.1
+  - gov.audit.1
+  - gov.consent.write
+  - gov.consent.shell
+  - gov.consent.network
+  - gov.safety.1
+  - gov.respec
+  - gov.build_export
+  - perception.search.1
+  - perception.search.2
+  - perception.files.1
+  - perception.memory.1
+  - execution.tools.whitelist
+  - execution.call_budget.1
+  - execution.call_budget.2
+  - execution.loop_budget.1
+  - execution.loop_budget.2
+  - execution.subagent.summon
+  - execution.subagent.squad
+  - execution.parallel.1
+  - execution.parallel.2
+  - execution.gateway.on_demand

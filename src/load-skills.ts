@@ -3,12 +3,16 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse as parseYaml } from 'yaml';
-import type { SkillCatalog, SkillNode, TabId } from './types.js';
+import type { DomainId, SkillCatalog, SkillNode, TabId } from './types.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 function isTab(v: unknown): v is TabId {
   return v === 'perception' || v === 'execution' || v === 'governance';
+}
+
+function isDomain(v: unknown): v is DomainId {
+  return v === 'core' || v === 'development' || v === 'research' || v === 'assistant' || v === 'governance';
 }
 
 function normalizeNode(raw: Record<string, unknown>): SkillNode {
@@ -20,6 +24,7 @@ function normalizeNode(raw: Record<string, unknown>): SkillNode {
   return {
     id,
     tab,
+    domain: isDomain(raw.domain) ? raw.domain : (tab === 'governance' ? 'governance' : 'core'),
     name_zh: String(raw.name_zh ?? id),
     name_en: raw.name_en != null ? String(raw.name_en) : undefined,
     rank: typeof raw.rank === 'number' ? raw.rank : undefined,

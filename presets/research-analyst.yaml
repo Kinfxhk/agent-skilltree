@@ -1,0 +1,28 @@
+schema: agent-skilltree/preset/v1
+id: research-analyst
+title: "Research Analyst"
+points: 30
+blurb_zh: "研究分析：搜尋、引用核實、學術來源、綜合報告；出站要同意。"
+blurb_en: "Research analyst: search, citation checks, scholarly sources, synthesis; outbound needs consent."
+agent_purpose_zh: "Agent 可以搜尋、核實引用、讀取學術來源、做多源綜合；不可公開發佈或未經同意出站。"
+agent_purpose_en: "The agent may search, verify citations, read scholarly sources and synthesise multiple sources; it may not publish publicly or go outbound without consent."
+requires_human_approval_for: [outbound]
+allocate_order:
+  - gov.soul.base
+  - gov.audit.1
+  - gov.consent.write
+  - gov.consent.network
+  - gov.content_policy
+  - gov.respec
+  - gov.build_export
+  - perception.search.1
+  - perception.search.2
+  - perception.research.citations
+  - perception.research.scholar
+  - execution.research.synth
+  - perception.files.1
+  - perception.memory.1
+  - execution.tools.whitelist
+  - execution.call_budget.1
+  - execution.call_budget.2
+  - execution.parallel.1

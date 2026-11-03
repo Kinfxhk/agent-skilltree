@@ -2,7 +2,7 @@ schema: agent-skilltree/build/v0
 id: reader-safe
 title: "Reader Safe"
 points_spent: 17
-blurb_zh: "只看不亂改：視覺／搜尋／檔案讀＋基礎治理；幾乎不開 Shell／Gateway。"
+blurb_zh: "只睇唔亂改：視覺／搜尋／檔案讀＋基礎治理；幾乎唔開 Shell／Gateway。"
 blurb_en: "Read-first: vision/search/files read + baseline governance; almost no shell/gateway."
 preview: ./reader-safe.png
 tree_ref: ../../skills/mvp-36.yaml

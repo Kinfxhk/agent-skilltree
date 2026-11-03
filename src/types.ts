@@ -3,6 +3,8 @@
 
 export type TabId = 'perception' | 'execution' | 'governance';
 
+export type DomainId = 'core' | 'development' | 'research' | 'assistant' | 'governance';
+
 export type PlatformId = 'linux' | 'darwin' | 'win32';
 
 export type ShellDialect =
@@ -21,6 +23,7 @@ export type AdmitDecision = 'allow' | 'deny' | 'ask';
 export interface SkillNode {
   id: string;
   tab: TabId;
+  domain?: DomainId;
   name_zh: string;
   name_en?: string;
   rank?: number;

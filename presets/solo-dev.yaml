@@ -1,0 +1,25 @@
+schema: agent-skilltree/preset/v1
+id: solo-dev
+title: "Solo Developer"
+points: 26
+blurb_zh: "單人開發：讀 repo、跑測試、出 patch；release 仍要人手批。"
+blurb_en: "Solo dev: read repos, run tests, propose patches; release still needs a human."
+agent_purpose_zh: "Agent 可以讀取 repo、跑測試、提出安全 patch 並整理 diff；不可以自行 release、push 或改 CI 權限。"
+agent_purpose_en: "The agent may read repositories, run tests, propose safe patches and summarise diffs; it may not release, push, or change CI permissions."
+requires_human_approval_for: [patch, release]
+allocate_order:
+  - gov.soul.base
+  - gov.audit.1
+  - gov.consent.write
+  - gov.respec
+  - gov.build_export
+  - gov.strict_path_mode
+  - perception.files.1
+  - execution.tools.whitelist
+  - execution.dev.repo_read
+  - execution.dev.test
+  - execution.dev.patch
+  - execution.dev.release
+  - execution.call_budget.1
+  - execution.call_budget.2
+  - execution.loop_budget.1

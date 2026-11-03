@@ -132,6 +132,42 @@ export class PolicyCompiler {
         case 'tools.fs_write':
           toolAsk.push('fs_write');
           break;
+        case 'tools.repo_read':
+          toolAllow.push('repo_read');
+          break;
+        case 'tools.patch':
+          toolAsk.push('patch');
+          break;
+        case 'tools.tests':
+          toolAllow.push('tests');
+          break;
+        case 'tools.release':
+          toolAsk.push('release');
+          break;
+        case 'tools.citations':
+          toolAllow.push('citations');
+          break;
+        case 'tools.scholar':
+          toolAllow.push('scholar');
+          break;
+        case 'tools.synth':
+          toolAllow.push('synth');
+          break;
+        case 'tools.email_read':
+          toolAllow.push('email_read');
+          break;
+        case 'tools.calendar_read':
+          toolAllow.push('calendar_read');
+          break;
+        case 'tools.email_draft':
+          toolAllow.push('email_draft');
+          break;
+        case 'tools.email_send':
+          toolAsk.push('email_send');
+          break;
+        case 'tools.calendar_write':
+          toolAsk.push('calendar_write');
+          break;
         default:
           break;
       }
@@ -140,6 +176,13 @@ export class PolicyCompiler {
     // Capability = responsibility: shell grant without shell consent stays ask/deny floor
     if (toolAsk.includes('bash') && approvalShell === 'deny') {
       approvalShell = 'ask';
+    }
+
+    // Sensitive tools stay denied until their node grants allow/ask.
+    for (const sensitive of ['email_send', 'calendar_write', 'release', 'patch']) {
+      if (!toolAllow.includes(sensitive) && !toolAsk.includes(sensitive)) {
+        toolDeny.push(sensitive);
+      }
     }
 
     void CONSTITUTION_LOCKS; // referenced for clarity — locks always applied below

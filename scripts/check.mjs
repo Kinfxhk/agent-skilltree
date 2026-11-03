@@ -80,7 +80,7 @@ ok(`skills catalog (${nodes.length} nodes)`);
 
 const readme = readFileSync(join(root, 'README.md'), 'utf8');
 for (const needle of [
-  'M0',
+  'M1',
   '0.2.1-rc.5',
   'PolicyCompiler',
   'Path Hygiene',

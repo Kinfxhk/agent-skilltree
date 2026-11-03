@@ -383,6 +383,124 @@ nodes:
     danger: low
     note: "Agent cannot self-disable (Constitution). Human may turn off with audit."
 
+  # ——— Domain pack: Development ———
+  - id: execution.dev.repo_read
+    tab: execution
+    domain: development
+    name_zh: Repo 讀取
+    name_en: Repo Read
+    rank: 1
+    cost: 1
+    requires: [perception.files.1]
+    grants: [tools.repo_read]
+  - id: execution.dev.patch
+    tab: execution
+    domain: development
+    name_zh: 安全 Patch
+    name_en: Safe Patch
+    rank: 2
+    cost: 2
+    requires: [execution.dev.repo_read, execution.tools.whitelist]
+    grants: [tools.patch]
+    danger: medium
+  - id: execution.dev.test
+    tab: execution
+    domain: development
+    name_zh: 測試跑手
+    name_en: Test Runner
+    rank: 2
+    cost: 1
+    requires: [execution.dev.repo_read]
+    grants: [tools.tests]
+  - id: execution.dev.release
+    tab: execution
+    domain: development
+    name_zh: Release 發佈
+    name_en: Release
+    rank: 3
+    cost: 3
+    requires: [execution.dev.test, gov.consent.write]
+    grants: [tools.release]
+    danger: high
+
+  # ——— Domain pack: Research ———
+  - id: perception.research.citations
+    tab: perception
+    domain: research
+    name_zh: 引用核實
+    name_en: Citation Check
+    rank: 2
+    cost: 1
+    requires: [perception.search.2]
+    grants: [tools.citations]
+  - id: perception.research.scholar
+    tab: perception
+    domain: research
+    name_zh: 學術搜尋
+    name_en: Scholar Search
+    rank: 2
+    cost: 2
+    requires: [perception.search.2]
+    grants: [tools.scholar]
+  - id: execution.research.synth
+    tab: execution
+    domain: research
+    name_zh: 研究綜合
+    name_en: Research Synthesis
+    rank: 2
+    cost: 2
+    requires: [perception.research.citations]
+    grants: [tools.synth]
+
+  # ——— Domain pack: Personal Assistant ———
+  - id: perception.assistant.inbox
+    tab: perception
+    domain: assistant
+    name_zh: 收件匣讀取
+    name_en: Inbox Read
+    rank: 1
+    cost: 1
+    requires: []
+    grants: [tools.email_read]
+  - id: perception.assistant.calendar
+    tab: perception
+    domain: assistant
+    name_zh: 日曆讀取
+    name_en: Calendar Read
+    rank: 1
+    cost: 1
+    requires: []
+    grants: [tools.calendar_read]
+  - id: execution.assistant.draft
+    tab: execution
+    domain: assistant
+    name_zh: 草擬回覆
+    name_en: Draft Reply
+    rank: 2
+    cost: 1
+    requires: [perception.assistant.inbox]
+    grants: [tools.email_draft]
+  - id: execution.assistant.send
+    tab: execution
+    domain: assistant
+    name_zh: 發送郵件
+    name_en: Send Email
+    rank: 3
+    cost: 2
+    requires: [execution.assistant.draft, gov.consent.network]
+    grants: [tools.email_send]
+    danger: high
+  - id: execution.assistant.schedule
+    tab: execution
+    domain: assistant
+    name_zh: 安排日程
+    name_en: Schedule
+    rank: 2
+    cost: 2
+    requires: [perception.assistant.calendar, gov.consent.write]
+    grants: [tools.calendar_write]
+    danger: medium
+
 deferred:
   - id: execution.gateway.fleet
     reason: "Fleet lifecycle deferred"

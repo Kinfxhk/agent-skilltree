@@ -1,144 +1,78 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>agent-skilltree · UI preview (Dark Gothic Fantasy)</title>
-  <!-- Preferred: tokens-gothic.css (locked to Boss gothic-*-preview.jpg). tokens.css = v1 gold-green archive. -->
-  <link rel="stylesheet" href="./tokens-gothic.css" />
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: var(--bg-deep);
-      color: var(--text-primary);
-      font-family: "Libre Baskerville", "Noto Serif TC", Georgia, serif;
-    }
-    .shell {
-      display: grid;
-      grid-template-columns: 160px 1fr 220px;
-      gap: 12px;
-      padding: 16px;
-      min-height: 100vh;
-    }
-    .panel {
-      background: var(--bg-panel);
-      border: var(--rim-width) solid var(--gold-dim);
-      border-radius: 4px;
-      padding: 12px;
-      box-shadow: inset 0 0 0 1px var(--accent-crimson);
-    }
-    .canvas {
-      background: var(--parchment);
-      background-image: linear-gradient(180deg, rgba(92,42,34,0.12), transparent 40%);
-    }
-    .tabs button {
-      display: block;
-      width: 100%;
-      margin: 0 0 8px;
-      padding: 10px;
-      border: 1px solid var(--iron);
-      background: transparent;
-      color: var(--text-muted);
-      cursor: pointer;
-      font-family: inherit;
-      letter-spacing: 0.02em;
-    }
-    .tabs button[data-tab="perception"].active { color: var(--tab-perception); border-color: var(--tab-perception); }
-    .tabs button[data-tab="execution"].active { color: var(--tab-execution); border-color: var(--tab-execution); }
-    .tabs button[data-tab="governance"].active { color: var(--tab-governance); border-color: var(--tab-governance); }
-    .nodes { display: flex; flex-wrap: wrap; gap: 20px; padding: 24px; align-items: center; }
-    .node {
-      width: var(--node-size);
-      height: var(--node-size);
-      border-radius: 50%;
-      border: var(--rim-width) solid var(--locked);
-      background: var(--stone);
-      display: grid;
-      place-items: center;
-      font-size: 10px;
-      text-align: center;
-      padding: 4px;
-      position: relative;
-    }
-    .node::after {
-      content: "";
-      position: absolute;
-      inset: -6px;
-      border-radius: 50%;
-      border: 1px solid transparent;
-      pointer-events: none;
-    }
-    .node.locked { background: var(--locked); color: var(--text-muted); border-color: var(--gold-dim); }
-    .node.unlockable { border-color: var(--edge-unlockable); background: transparent; color: var(--edge-unlockable); }
-    .node.invested { background: var(--fill-invested); border-color: var(--gold); color: var(--text-primary); }
-    .node.max {
-      background: var(--fill-invested);
-      border-color: var(--glow-max);
-      box-shadow: 0 0 var(--glow-blur) var(--glow-max);
-      color: var(--text-primary);
-    }
-    .node.softlock { background: var(--soft-locked); border-color: var(--accent-blood); color: var(--text-muted); }
-    .node.capstone {
-      width: var(--capstone-size);
-      height: var(--capstone-size);
-      border-color: var(--capstone-rim);
-      box-shadow: 0 0 12px var(--accent-crimson), 0 0 24px var(--glow-max);
-    }
-    .swatches {
-      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;
-    }
-    .swatch {
-      width: 36px; height: 36px; border-radius: 4px;
-      border: 1px solid var(--gold-dim);
-      title: "";
-    }
-    .disclaimer { grid-column: 1 / -1; color: var(--text-muted); font-size: 12px; font-family: system-ui, "Noto Sans TC", sans-serif; }
-    .label { font-family: system-ui, "Noto Sans TC", sans-serif; font-size: 11px; color: var(--text-muted); margin: 0 0 8px; }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>agent-skilltree · Grimdark Policy Engine</title>
+<link rel="stylesheet" href="./tokens-gothic.css" />
+<style>
+*{box-sizing:border-box} html,body{height:100%}
+body{margin:0;color:var(--text-primary);font-family:"Palatino Linotype","Book Antiqua",Palatino,"Noto Serif TC",Georgia,serif;background:#070605 url("./assets/background-grimdark.png") center/cover fixed no-repeat;overflow:hidden}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 35%,rgba(140,70,30,.18),transparent 55%),linear-gradient(180deg,rgba(4,3,3,.78),rgba(4,3,3,.9))}
+.topbar{position:relative;z-index:2;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;border-bottom:1px solid rgba(154,120,56,.45);background:linear-gradient(180deg,rgba(14,11,9,.92),rgba(9,7,6,.82));backdrop-filter:blur(14px);box-shadow:0 8px 30px rgba(0,0,0,.55)}
+.brand{display:flex;align-items:center;gap:14px}.sigils{width:128px;height:42px;background:url("./assets/sigils.png") center/cover no-repeat;filter:sepia(.15) contrast(1.1);border:1px solid rgba(154,120,56,.35);box-shadow:inset 0 0 18px rgba(0,0,0,.7)}
+.title{font-size:15px;letter-spacing:.22em;text-transform:uppercase}.subtitle{font-size:10px;letter-spacing:.18em;color:var(--text-muted);margin-top:3px;text-transform:uppercase}
+.stats{display:flex;align-items:center;gap:14px;font:12px system-ui,"Noto Sans TC",sans-serif}.points{color:var(--edge-unlockable);font-size:12px}.points b{font-size:22px;color:#e8c877}
+.btn{border:1px solid var(--gold-dim);background:linear-gradient(180deg,rgba(60,44,24,.75),rgba(20,15,10,.75));color:var(--text-primary);padding:8px 12px;cursor:pointer;font:11px/1 system-ui,"Noto Sans TC",sans-serif;letter-spacing:.08em;text-transform:uppercase;box-shadow:inset 0 1px 0 rgba(255,220,150,.14),0 2px 8px rgba(0,0,0,.4)}
+.btn:hover{border-color:var(--gold);color:#f4e4b8}.btn:disabled{opacity:.35;cursor:not-allowed}
+.shell{position:relative;z-index:2;display:grid;grid-template-columns:210px minmax(0,1fr) 310px;gap:14px;padding:14px;height:calc(100vh - 64px)}
+.panel{background:linear-gradient(180deg,rgba(16,13,11,.82),rgba(9,7,6,.76));border:1px solid rgba(154,120,56,.34);box-shadow:inset 0 0 0 1px rgba(160,40,40,.1),0 10px 30px rgba(0,0,0,.45);backdrop-filter:blur(12px);min-height:0}
+.rail{padding:14px 12px;overflow:auto}.label{margin:0 0 10px;font:10px/1 system-ui,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--text-muted)}
+.domain{display:flex;align-items:center;justify-content:space-between;width:100%;margin:0 0 7px;padding:10px 9px;border:1px solid rgba(154,120,56,.2);background:rgba(12,10,8,.55);color:var(--text-muted);cursor:pointer;font:12px/1.2 system-ui,"Noto Sans TC",sans-serif;text-align:left}
+.domain:hover{border-color:var(--gold-dim);color:var(--text-primary)}.domain.active{border-color:var(--edge-unlockable);color:#f1dfb1;background:linear-gradient(90deg,rgba(120,80,30,.35),rgba(20,14,9,.5))}.domain .count{color:var(--gold);font-size:11px}
+.preset{display:flex;align-items:center;justify-content:space-between;width:100%;margin:0 0 5px;padding:7px 8px;border:1px solid rgba(154,120,56,.14);background:rgba(10,8,6,.35);color:var(--text-muted);cursor:pointer;font:10px/1.2 system-ui,sans-serif;text-align:left}.preset:hover{border-color:var(--gold-dim);color:var(--text-primary)}.preset b{color:#d8c08a;font-weight:500}.preset .pts{color:var(--gold);font-size:9px}
+.legend{margin-top:18px;padding-top:12px;border-top:1px solid rgba(154,120,56,.18)}.legend-row{display:flex;align-items:center;gap:8px;margin:7px 0;font:11px system-ui,sans-serif;color:var(--text-muted)}.dot{width:10px;height:10px;border-radius:50%;border:1px solid var(--gold-dim)}.dot.locked{background:var(--locked)}.dot.unlockable{background:transparent;border-color:var(--edge-unlockable);box-shadow:0 0 8px rgba(184,146,74,.5)}.dot.invested{background:var(--fill-invested);border-color:var(--glow-max)}.dot.soft{background:transparent;border-style:dashed;border-color:var(--soft-locked)}
+.board{display:flex;flex-direction:column;overflow:hidden}.board-head{padding:14px 16px 10px;border-bottom:1px solid rgba(154,120,56,.22);display:flex;align-items:baseline;justify-content:space-between}.board-head h2{margin:0;font-size:17px;letter-spacing:.16em;text-transform:uppercase;color:#ead9b0;font-weight:500}.meta{font:10px system-ui,sans-serif;color:var(--text-muted);letter-spacing:.12em}
+.tree-wrap{position:relative;flex:1;overflow:scroll;padding:10px 10px 28px;scrollbar-color:var(--gold-dim) rgba(0,0,0,.35);scrollbar-width:thin}.tree-wrap::-webkit-scrollbar{width:10px;height:10px}.tree-wrap::-webkit-scrollbar-track{background:rgba(0,0,0,.35)}.tree-wrap::-webkit-scrollbar-thumb{background:var(--gold-dim);border:1px solid #0a0807}.tree{position:relative;min-width:760px;min-height:620px}.edges{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}.edges line{stroke:rgba(190,150,80,.68);stroke-width:1.7}.edges line.dim{stroke:rgba(120,102,72,.42);stroke-dasharray:4 5}.edges line.active{stroke:rgba(226,188,85,.95);stroke-width:2}.edges line.owned{stroke:rgba(106,216,154,.8);stroke-width:2}
+.node{position:absolute;width:92px;height:92px;padding:0;border-radius:50%;border:1px solid rgba(154,120,56,.5);background:#0a0807 url("./assets/node-frame.png") center/112% no-repeat;color:var(--text-primary);cursor:pointer;box-shadow:inset 0 0 18px rgba(0,0,0,.85),0 4px 16px rgba(0,0,0,.55);transition:transform .12s,box-shadow .12s,border-color .12s;display:grid;place-items:center}
+.node:hover{transform:translateY(-2px) scale(1.02);border-color:var(--edge-unlockable)}.node .disc{width:66px;height:66px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:radial-gradient(circle at 50% 35%,rgba(40,30,22,.92),rgba(5,4,3,.94));border:1px solid rgba(190,150,80,.28);box-shadow:inset 0 0 10px rgba(0,0,0,.8);padding:4px;text-align:center}
+.node .zh{font:12px/1.18 "Noto Serif TC","Times New Roman",serif;max-width:56px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}.node .cost{font:9px system-ui,sans-serif;color:var(--gold)}
+.node.locked{filter:grayscale(.55) brightness(.72);opacity:.86}.node.soft{opacity:.62;border-style:dashed}.node.unlockable{border-color:var(--edge-unlockable);box-shadow:inset 0 0 18px rgba(0,0,0,.8),0 0 26px rgba(226,188,85,.62)}.node.unlockable .disc{border-color:rgba(226,188,85,.55)}.node.invested{border-color:var(--glow-max);box-shadow:inset 0 0 18px rgba(0,0,0,.75),0 0 28px rgba(47,143,85,.55)}.node.invested .disc{border-color:rgba(106,216,154,.55)}.node.selected{outline:2px solid #e8c877;outline-offset:3px}.node.danger .zh{color:#e2a29a}.node .badge{position:absolute;top:-7px;right:-5px;font:8px/1 system-ui,sans-serif;letter-spacing:.04em;padding:3px 4px;border:1px solid var(--gold-dim);background:#0b0907;color:var(--text-muted)}.node.unlockable .badge{color:#1b1408;background:#e2bc55;border-color:#f0d58a}.node.invested .badge{color:#06140b;background:#6ad89a;border-color:#9fe0b5}.node.locked .badge{opacity:.7}
+.inspector{padding:16px;overflow:auto}.inspector h3{margin:0 0 4px;font-size:16px;color:#ead9b0;font-weight:500;letter-spacing:.08em}.inspector .en{font:10px system-ui,sans-serif;letter-spacing:.12em;color:var(--text-muted);text-transform:uppercase}.pill{display:inline-block;padding:3px 7px;border:1px solid var(--gold-dim);font:10px system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;margin-top:10px;color:var(--text-muted)}.pill.unlockable{color:#f1dfb1;border-color:var(--edge-unlockable)}.pill.invested{color:#9fe0b5;border-color:var(--glow-max)}
+.kv{margin-top:14px;font:11px/1.6 system-ui,"Noto Sans TC",sans-serif;color:var(--text-muted)}.kv b{color:var(--text-primary);font-weight:500}.grants{margin:8px 0 0;padding:0;list-style:none}.grants li{padding:4px 0;border-bottom:1px solid rgba(154,120,56,.12);font:11px/1.4 "SFMono-Regular",Consolas,monospace;color:#c9b98f}.empty{color:var(--text-muted);font:12px/1.7 system-ui,sans-serif;margin-top:24px}.actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.foot{padding:10px 16px;border-top:1px solid rgba(154,120,56,.18);font:10px system-ui,sans-serif;color:var(--text-muted)}.disclaimer{font:10px/1.5 system-ui,sans-serif;color:#6f6658;margin-top:14px}
+@media(max-width:1180px){.shell{grid-template-columns:190px minmax(0,1fr) 270px}}@media(max-width:960px){.shell{grid-template-columns:170px minmax(0,1fr)}.inspector{display:none}}
+</style>
 </head>
 <body>
-  <div class="shell">
-    <aside class="panel tabs">
-      <p class="label">Tabs</p>
-      <button type="button" data-tab="perception" class="active">Perception</button>
-      <button type="button" data-tab="execution">Execution</button>
-      <button type="button" data-tab="governance">Governance</button>
-      <p class="label" style="margin-top:16px">Palette</p>
-      <div class="swatches" aria-hidden="true">
-        <div class="swatch" style="background:var(--bg-deep)" title="bg-deep"></div>
-        <div class="swatch" style="background:var(--gold)" title="rust gold"></div>
-        <div class="swatch" style="background:var(--accent-blood)" title="blood-brown"></div>
-        <div class="swatch" style="background:var(--accent-crimson)" title="crimson"></div>
-        <div class="swatch" style="background:var(--fill-invested)" title="emerald invested"></div>
-      </div>
-    </aside>
-    <main class="panel canvas">
-      <div class="nodes" id="nodes">
-        <div class="node locked">Locked</div>
-        <div class="node unlockable">Unlockable</div>
-        <div class="node invested">Invested</div>
-        <div class="node max">Max</div>
-        <div class="node softlock">Prereq</div>
-        <div class="node invested capstone">Capstone</div>
-      </div>
-    </main>
-    <aside class="panel">
-      <strong>Policy inspector</strong>
-      <p style="color: var(--text-muted); font-size: 13px; font-family: system-ui, sans-serif;">M0 stub — Dark Gothic Fantasy chrome. Geometric icons only; no third-party game IP.</p>
-    </aside>
-    <p class="disclaimer">
-      Inspired by classic ARPG skill trees. Original chrome &amp; tokens locked to gothic-panel／mood preview — not affiliated with any game studio or LLM vendor.
-    </p>
-  </div>
-  <script>
-    document.querySelectorAll('.tabs button').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.tabs button').forEach((b) => b.classList.remove('active'));
-        btn.classList.add('active');
-      });
-    });
-  </script>
+<header class="topbar">
+  <div class="brand"><div class="sigils"></div><div><div class="title">Agent Skilltree</div><div class="subtitle">Grimdark policy engine · M1</div></div></div>
+  <div class="stats"><span class="points"><b id="points">0</b> points</span><button class="btn" id="export">Export</button><button class="btn" id="respec">Respec</button></div>
+</header>
+<div class="shell">
+  <aside class="panel rail"><p class="label">Domains</p><div id="domains"></div><p class="label" style="margin-top:16px">Presets</p><div id="presets"></div><div class="legend"><p class="label">Node state</p><div class="legend-row"><span class="dot locked"></span>Locked</div><div class="legend-row"><span class="dot unlockable"></span>Unlockable</div><div class="legend-row"><span class="dot invested"></span>Invested</div><div class="legend-row"><span class="dot soft"></span>Prereq / points</div></div></aside>
+  <main class="panel board"><div class="board-head"><h2 id="domainTitle">Core</h2><span class="meta" id="domainMeta"></span></div><div class="tree-wrap"><div class="tree" id="tree"><svg class="edges" id="edges"><defs><marker id="arrow" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L6,3 L0,6 z" fill="#b8924a"/></marker></defs></svg><div id="nodes"></div></div></div><div class="foot" id="foot">Human operator allocates points. The agent can inspect and export only.</div></main>
+  <aside class="panel inspector" id="inspector"><h3 id="insTitle">Select a node</h3><div class="en" id="insEn">The tree waits.</div><div id="insBody" class="empty">Click a node to inspect its cost, prerequisites, and the policy grants it unlocks.</div><div class="disclaimer">Original chrome &amp; tokens. Inspired by classic ARPG skill trees; not affiliated with any game studio or LLM vendor.</div></aside>
+</div>
+<script src="./nodes.js"></script>
+<script>
+(()=>{
+const DATA=window.SKILLTREE_DATA;
+if(!DATA){document.getElementById('foot').textContent='nodes.js missing — run npm run ui:data';return}
+const DOMAINS=[{id:'core',label:'Core'},{id:'development',label:'Development'},{id:'research',label:'Research'},{id:'assistant',label:'Personal Assistant'},{id:'governance',label:'Governance'}];
+const KEY='agent-skilltree-state-v1',DEFAULT_POINTS=24,byId=new Map(DATA.nodes.map(n=>[n.id,n])),PRESETS=DATA.presets||[];
+function load(){try{const r=JSON.parse(localStorage.getItem(KEY)||'null');if(r&&typeof r.unlocked==='object'&&Number.isFinite(Number(r.pointsRemaining)))return{unlocked:r.unlocked,pointsRemaining:Number(r.pointsRemaining)}}catch{}return{unlocked:{},pointsRemaining:DEFAULT_POINTS}}
+let state=load(),active='core',selected=null,source='localStorage';
+function persist(){localStorage.setItem(KEY,JSON.stringify(state));return fetch('/api/state',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(state)}).then(r=>{if(r.ok){source='file';}return r.ok}).catch(()=>false)}
+const nodesFor=d=>DATA.nodes.filter(n=>(n.domain||'core')===d);
+const prereq=n=>n.requires.every(id=>state.unlocked[id]!=null);
+const statusOf=n=>state.unlocked[n.id]!=null?'invested':(!prereq(n)?'locked':(state.pointsRemaining>=n.cost?'unlockable':'soft'));
+const label=n=>n.name_zh||n.name_en||n.id;
+const dlabel=id=>(DOMAINS.find(d=>d.id===id)||{label:id}).label;
+function layout(domain){const nodes=nodesFor(domain).slice().sort((a,b)=>(a.rank||1)-(b.rank||1)||a.id.localeCompare(b.id));const byRank=new Map();for(const n of nodes){const r=n.rank||1;if(!byRank.has(r))byRank.set(r,[]);byRank.get(r).push(n)}const pos=new Map();let mx=0,my=0;for(const [r,arr] of [...byRank.entries()].sort((a,b)=>a[0]-b[0]))arr.forEach((n,i)=>{const x=60+(r-1)*205,y=62+i*104;pos.set(n.id,{x,y});mx=Math.max(mx,x);my=Math.max(my,y)});return{nodes,pos,width:mx+180,height:my+140}}
+function renderPresets(){const h=document.getElementById('presets');if(!h)return;h.innerHTML='';for(const p of PRESETS){const b=document.createElement('button');b.className='preset';b.title=p.agent_purpose_zh||p.blurb_zh||'';b.innerHTML=`<span><b>${p.title}</b></span><span class="pts">${p.points}p</span>`;b.onclick=()=>applyPreset(p.id);h.appendChild(b)}}
+function renderDomains(){const h=document.getElementById('domains');h.innerHTML='';for(const d of DOMAINS){const c=nodesFor(d.id).length,b=document.createElement('button');b.className='domain'+(d.id===active?' active':'');b.innerHTML=`<span>${d.label}</span><span class="count">${c}</span>`;b.onclick=()=>{active=d.id;selected=null;render()};h.appendChild(b)}}
+function renderEdges(nodes,pos,w,h){const svg=document.getElementById('edges');svg.innerHTML='';svg.setAttribute('viewBox',`0 0 ${w} ${h}`);svg.setAttribute('width',w);svg.setAttribute('height',h);for(const n of nodes){const to=pos.get(n.id);if(!to)continue;for(const req of n.requires){const from=pos.get(req);if(!from)continue;const l=document.createElementNS('http://www.w3.org/2000/svg','line');l.setAttribute('x1',from.x+46);l.setAttribute('y1',from.y+46);l.setAttribute('x2',to.x+46);l.setAttribute('y2',to.y+46);l.setAttribute('marker-end','url(#arrow)');const owned=state.unlocked[n.id]!=null,sr=state.unlocked[req]!=null;l.setAttribute('class',owned?'owned':(sr?'active':'dim'));svg.appendChild(l)}}}
+function renderNodes(nodes,pos){const h=document.getElementById('nodes');h.innerHTML='';for(const n of nodes){const p=pos.get(n.id);if(!p)continue;const st=statusOf(n),b=document.createElement('button');b.className=`node ${st}`+(n.danger?' danger':'')+(n.id===selected?' selected':'');b.style.left=p.x+'px';b.style.top=p.y+'px';b.title=`${label(n)} · cost ${n.cost} · ${st}`;const badge=st==='invested'?'✓':(st==='unlockable'?'READY':(st==='soft'?'PREREQ':'LOCK'));b.innerHTML=`<span class="badge">${badge}</span><span class="disc"><span class="zh">${label(n)}</span><span class="cost">${n.cost}</span></span>`;b.onclick=()=>{selected=n.id;renderInspector();renderNodes(nodes,pos)};b.ondblclick=()=>allocate(n.id);h.appendChild(b)}}
+function renderInspector(){const n=selected?byId.get(selected):null,T=document.getElementById('insTitle'),E=document.getElementById('insEn'),B=document.getElementById('insBody');if(!n){T.textContent='Select a node';E.textContent='The tree waits.';B.className='empty';B.innerHTML='Click a node to inspect its cost, prerequisites, and the policy grants it unlocks.';return}const st=statusOf(n);T.textContent=label(n);E.textContent=n.name_en||n.id;B.className='';const grants=(n.grants||[]).map(g=>`<li>${g}</li>`).join('')||'<li>—</li>';const reqs=(n.requires||[]).map(r=>`<li>${label(byId.get(r)||{id:r})}</li>`).join('')||'<li>—</li>';B.innerHTML=`<span class="pill ${st}">${st}</span><div class="kv"><b>Cost</b> ${n.cost} · <b>Rank</b> ${n.rank||1} · <b>Danger</b> ${n.danger||'low'}</div><div class="kv"><b>Requires</b></div><ul class="grants">${reqs}</ul><div class="kv"><b>Grants</b></div><ul class="grants">${grants}</ul><div class="actions"><button class="btn" id="allocate" ${st!=='unlockable'?'disabled':''}>Allocate · ${n.cost}</button></div>`;const a=document.getElementById('allocate');if(a)a.onclick=()=>allocate(n.id)}
+function allocate(id){const n=byId.get(id);if(!n||state.unlocked[id]!=null||!prereq(n)||state.pointsRemaining<n.cost)return;state.unlocked[id]=n.cost;state.pointsRemaining-=n.cost;persist().then(render)}
+function applyPreset(id){const p=PRESETS.find(x=>x.id===id);if(!p)return;let s={unlocked:{},pointsRemaining:p.points};for(const nid of p.allocate_order){const n=byId.get(nid);if(!n)continue;if(!n.requires.every(r=>s.unlocked[r]!=null))continue;if(s.pointsRemaining<n.cost)break;s.unlocked[nid]=n.cost;s.pointsRemaining-=n.cost}state=s;selected=null;source='file';persist().then(()=>{render();document.getElementById('foot').textContent=`Preset: ${p.title} · ${p.agent_purpose_zh||p.blurb_zh} State: ${source}.`})}
+function respec(){const refund=Object.values(state.unlocked).reduce((a,b)=>a+Number(b||0),0);state.unlocked={};state.pointsRemaining+=refund;selected=null;persist().then(render)}
+function exportState(){const blob=new Blob([JSON.stringify({version:1,exportedAt:new Date().toISOString(),state},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='skilltree-state.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+async function hydrate(){try{const r=await fetch('/api/state',{cache:'no-store'});if(r.ok){const d=await r.json();if(d&&d.state&&typeof d.state.unlocked==='object'){state={unlocked:d.state.unlocked,pointsRemaining:Number(d.state.pointsRemaining)||0};source='file'}}}catch{}}
+function render(){const {nodes,pos,width,height}=layout(active),w=Math.max(width,760),h=Math.max(height,620);document.getElementById('points').textContent=state.pointsRemaining;document.getElementById('domainTitle').textContent=dlabel(active);document.getElementById('domainMeta').textContent=`${nodes.length} nodes · ${Object.keys(state.unlocked).length} invested · scroll to explore`;document.getElementById('foot').textContent=`Human operator allocates points. The agent can inspect and export only. State: ${source}.`;if(!selected){const first=nodes.find(n=>statusOf(n)==='unlockable');if(first)selected=first.id}const tree=document.getElementById('tree');tree.style.width=w+'px';tree.style.height=h+'px';renderDomains();renderPresets();renderEdges(nodes,pos,w,h);renderNodes(nodes,pos);renderInspector()}
+document.getElementById('respec').onclick=respec;document.getElementById('export').onclick=exportState;hydrate().then(render);
+})();
+</script>
 </body>
 </html>

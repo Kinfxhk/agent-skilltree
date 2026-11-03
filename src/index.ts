@@ -1,16 +1,18 @@
 // SPDX-License-Identifier: MIT
 /**
- * agent-skilltree — Host half (Cordis/DSH plugin stub).
+ * agent-skilltree — DSH/Cordis host half.
  *
- * Registers skilltree.* tools (stubs) and documents where tools/pre-execute
- * path hygiene should wire. Full Cordis ctx typing is optional at M0 —
- * apply() accepts a loose host context.
+ * Human operators allocate points via `scripts/skilltree.mjs`; the agent only gets
+ * read-only inspect/export tools. The host guard enforces path hygiene + locked
+ * sensitive tools, using the persisted SkillTreeState.
  *
  * Pin: @deepseek-ai/dsh@0.2.1-rc.5
  */
 import { PolicyCompiler } from './policy-compiler.js';
 import { pathHygieneCheck } from './path-hygiene.js';
 import { detectOsProfile } from './os-profile.js';
+import { createToolGuard, type ToolExecution } from './guard.js';
+import { loadState } from './state-store.js';
 import {
   allocate,
   createEmptyState,
@@ -25,73 +27,70 @@ export const inject: string[] = [];
 
 export const name = 'agent-skilltree';
 
-let treeState: SkillTreeState = createEmptyState(0);
+type ToolDef = {
+  name: string;
+  description: string;
+  parameters: Record<string, unknown>;
+  output: {
+    schema: Record<string, unknown>;
+    render: (args: unknown, value: unknown) => Array<{ type: 'text'; text: string }>;
+  };
+  execute: (args: Record<string, unknown>, exec: unknown) => Promise<string>;
+};
 
 type LooseCtx = {
   tools?: {
-    register?: (def: Record<string, unknown>) => void;
-    guard?: (name: string, fn: (...args: unknown[]) => unknown) => void;
+    register?: (def: ToolDef) => unknown;
+    guard?: (fn: (exec: ToolExecution) => string | undefined) => unknown;
   };
-  on?: (event: string, fn: (...args: unknown[]) => unknown) => void;
+  on?: (event: string, fn: (...args: unknown[]) => unknown) => unknown;
 };
 
-/**
- * Host apply — stub registrations.
- *
- * tools/pre-execute wiring (when host exposes ctx.on):
- *   ctx.on('tools/pre-execute', (call) => {
- *     const os = detectOsProfile();
- *     const policy = new PolicyCompiler().compile(treeState, os);
- *     if (!policy.pathHygiene) return; // or always run when Strict Path On
- *     const cmd = String(call?.arguments?.command ?? call?.command ?? '');
- *     if (!cmd) return;
- *     const result = pathHygieneCheck(cmd, policy.osProfile);
- *     // return result.decision — never silent rewrite
- *   });
- */
+const textOutput: ToolDef['output'] = {
+  schema: { type: 'string' },
+  render: (_args, value) => [{ type: 'text', text: String(value) }],
+};
+
+function currentState(): SkillTreeState {
+  return loadState();
+}
+
 export function apply(ctx: LooseCtx = {}): void {
   const register = ctx.tools?.register?.bind(ctx.tools);
   if (register) {
     register({
-      name: 'skilltree.allocate',
-      description: 'Allocate a skill point to a node (human operator).',
-      // stub execute — real host binds via tools API
-    });
-    register({
-      name: 'skilltree.respec',
-      description: 'Respec skill tree (human-only).',
-    });
-    register({
       name: 'skilltree.inspect',
-      description: 'Inspect tree state, unlockable nodes, compiled policy.',
+      description: 'Inspect the human-allocated skill tree, unlockable nodes and compiled AgentPolicy.',
+      parameters: {},
+      output: textOutput,
+      async execute() {
+        return JSON.stringify(inspect(currentState()), null, 2);
+      },
     });
+
     register({
       name: 'skilltree.export',
-      description: 'Export SkillTreeState + AgentPolicy manifest.',
+      description: 'Export SkillTreeState + AgentPolicy manifest (read-only).',
+      parameters: {},
+      output: textOutput,
+      async execute() {
+        return JSON.stringify(exportPolicy(currentState()), null, 2);
+      },
     });
   }
 
-  // Optional pre-execute hook comment-implemented when event bus exists
+  const guard = createToolGuard(currentState);
+
+  // Real DSH host guard (see ds-bot/src/host/tools.js): a returned string refuses the call.
+  if (typeof ctx.tools?.guard === 'function') {
+    ctx.tools.guard(guard);
+  }
+
+  // Fallback for hosts that only expose the pre-execute event. Never mutate argv.
   if (typeof ctx.on === 'function') {
     ctx.on('tools/pre-execute', (...args: unknown[]) => {
-      const call = (args[0] ?? {}) as {
-        arguments?: { command?: string };
-        command?: string;
-      };
-      const os = detectOsProfile();
-      const policy = new PolicyCompiler().compile(treeState, os);
-      if (!policy.pathHygiene && !policy.osProfile.strictPathMode) {
-        return { decision: 'allow' };
-      }
-      const cmd = String(call.arguments?.command ?? call.command ?? '');
-      if (!cmd) return { decision: 'allow' };
-      const result = pathHygieneCheck(cmd, policy.osProfile);
-      return {
-        decision: result.decision,
-        reason: result.reason,
-        hint: result.hint,
-        // NEVER rewrite call.arguments here
-      };
+      const reason = guard((args[0] ?? {}) as ToolExecution);
+      return reason ? { decision: 'deny', reason } : { decision: 'allow' };
     });
   }
 }
@@ -106,8 +105,3 @@ export {
   exportPolicy,
   createEmptyState,
 };
-
-/** Test helper — not for agent use. */
-export function __setTreeStateForTests(state: SkillTreeState): void {
-  treeState = state;
-}
