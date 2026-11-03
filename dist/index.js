@@ -13,6 +13,7 @@ import { pathHygieneCheck } from './path-hygiene.js';
 import { detectOsProfile } from './os-profile.js';
 import { createToolGuard } from './guard.js';
 import { loadState } from './state-store.js';
+import { startUiServer } from './ui-http.js';
 import { allocate, createEmptyState, exportPolicy, inspect, respec, } from './tree-api.js';
 /** Cordis requires an explicit inject before ctx.tools can be read. */
 export const inject = ['tools'];
@@ -25,6 +26,8 @@ function currentState() {
     return loadState();
 }
 export function apply(ctx = {}) {
+    if (!process.env.VITEST && process.env.SKILLTREE_UI !== '0')
+        startUiServer();
     const register = ctx.tools?.register?.bind(ctx.tools);
     if (register) {
         register({

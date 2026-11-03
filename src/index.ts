@@ -13,6 +13,7 @@ import { pathHygieneCheck } from './path-hygiene.js';
 import { detectOsProfile } from './os-profile.js';
 import { createToolGuard, type ToolExecution } from './guard.js';
 import { loadState } from './state-store.js';
+import { startUiServer } from './ui-http.js';
 import {
   allocate,
   createEmptyState,
@@ -56,6 +57,7 @@ function currentState(): SkillTreeState {
 }
 
 export function apply(ctx: LooseCtx = {}): void {
+  if (!process.env.VITEST && process.env.SKILLTREE_UI !== '0') startUiServer();
   const register = ctx.tools?.register?.bind(ctx.tools);
   if (register) {
     register({
