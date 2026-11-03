@@ -139,7 +139,7 @@ approval is still M2 (see `docs/m1-limits.md`).
   same `skilltree-state.json` as the CLI and plugin.
 - Art: `ui/assets/background-grimdark.png`, `node-frame.png`, `sigils.png` — generated with **Grok
   Imagine** (xAI), original, no third-party IP.
-- Composite preview: `ui/preview-dsh-en.png` (English; DSH shell blurred behind the plugin UI; no usage text readable).
+- Composite preview: `ui/preview-dsh-en.png` (English; DSH shell **lightly** blurred behind the plugin UI; no usage text readable).
 - Chinese preview: `ui/preview-dsh.png`. The UI follows the DSH/browser language; `?lang=en` / `?lang=zh` overrides.
 
 ## Documentation
