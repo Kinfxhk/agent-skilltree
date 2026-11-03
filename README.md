@@ -1,5 +1,7 @@
 # agent-skilltree
 
+**[☕ Buy Me a Coffee](https://buymeacoffee.com/kinfxhk)** · [GitHub Sponsors](https://github.com/sponsors/Kinfxhk)
+
 **Status: M1 — policy-first skill tree for DeepSeek Harness (DSH).**
 
 Allocate human-granted **skill points** across Development, Research and Personal Assistant nodes;
