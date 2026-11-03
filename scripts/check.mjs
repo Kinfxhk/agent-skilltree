@@ -78,6 +78,13 @@ for (const id of [
 }
 ok(`skills catalog (${nodes.length} nodes)`);
 
+const cjk = /[\u3400-\u9FFF\uF900-\uFAFF]/;
+const missingEnglish = nodes.filter((n) => !n.name_en || cjk.test(String(n.name_en)));
+if (missingEnglish.length > 0) {
+  fail(`nodes missing a CJK-free English name: ${missingEnglish.map((n) => n.id).join(', ')}`);
+}
+ok('English node labels (no CJK)');
+
 const readme = readFileSync(join(root, 'README.md'), 'utf8');
 for (const needle of [
   'M1',
