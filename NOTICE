@@ -1,0 +1,9 @@
+agent-skilltree
+Copyright (c) 2026 KINFX
+
+This product is licensed under the MIT License. See LICENSE.
+
+Not affiliated with DeepSeek, xAI, Blizzard Entertainment, Cursor, or any LLM vendor.
+Compatibility notes may mention DSH (DeepSeek Harness) as a technical host only
+(pin @deepseek-ai/dsh@0.2.1-rc.5). Skill-tree UX is original and only inspired by
+classic ARPG talent-tree interaction metaphors — no franchise assets or trademarks.

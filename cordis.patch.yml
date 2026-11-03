@@ -1,0 +1,7 @@
+# dsh bundle patch: inserts this plugin into a profile's layer stack.
+#
+# Declared as `dsh.bundle.patch` in package.json so `dsh plugin add` wires the
+# plugin as a profile layer (not a plain dependency).
+- insert:
+    - id: agent-skilltree
+      name: 'agent-skilltree'

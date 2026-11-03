@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kinfx.local/agent-skilltree/skill-node.schema.json",
+  "title": "SkillNode",
+  "type": "object",
+  "required": ["id", "tab", "name_zh", "cost", "requires", "grants"],
+  "additionalProperties": true,
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "tab": { "type": "string", "enum": ["perception", "execution", "governance"] },
+    "name_zh": { "type": "string" },
+    "name_en": { "type": "string" },
+    "rank": { "type": "integer", "minimum": 1 },
+    "cost": { "type": "number", "minimum": 0 },
+    "requires": { "type": "array", "items": { "type": "string" } },
+    "grants": { "type": "array", "items": { "type": "string" } },
+    "danger": { "type": "string", "enum": ["low", "medium", "high"] },
+    "capstone": { "type": "boolean" },
+    "default_enabled": { "type": "boolean" },
+    "note": { "type": "string" }
+  }
+}

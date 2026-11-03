@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>agent-skilltree · UI preview (M0)</title>
+  <link rel="stylesheet" href="./tokens.css" />
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      font-family: system-ui, "Noto Sans TC", sans-serif;
+    }
+    .shell {
+      display: grid;
+      grid-template-columns: 160px 1fr 220px;
+      gap: 12px;
+      padding: 16px;
+      min-height: 100vh;
+    }
+    .panel {
+      background: var(--bg-panel);
+      border: var(--rim-width) solid var(--gold-dim);
+      border-radius: 6px;
+      padding: 12px;
+    }
+    .canvas { background: var(--parchment); }
+    .tabs button {
+      display: block;
+      width: 100%;
+      margin: 0 0 8px;
+      padding: 10px;
+      border: 1px solid var(--stone);
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+    .tabs button[data-tab="perception"].active { color: var(--tab-perception); border-color: var(--tab-perception); }
+    .tabs button[data-tab="execution"].active { color: var(--tab-execution); border-color: var(--tab-execution); }
+    .tabs button[data-tab="governance"].active { color: var(--tab-governance); border-color: var(--tab-governance); }
+    .nodes { display: flex; flex-wrap: wrap; gap: 16px; padding: 24px; align-items: center; }
+    .node {
+      width: var(--node-size);
+      height: var(--node-size);
+      border-radius: 50%;
+      border: var(--rim-width) solid var(--locked);
+      background: var(--stone);
+      display: grid;
+      place-items: center;
+      font-size: 11px;
+      text-align: center;
+      padding: 4px;
+    }
+    .node.locked { background: var(--locked); color: var(--text-muted); }
+    .node.unlockable { border-color: var(--edge-unlockable); background: transparent; color: var(--edge-unlockable); }
+    .node.invested { background: var(--fill-invested); border-color: var(--gold); }
+    .node.max { background: var(--fill-invested); border-color: var(--glow-max); box-shadow: 0 0 var(--glow-blur) var(--glow-max); }
+    .node.capstone { width: var(--capstone-size); height: var(--capstone-size); border-color: var(--capstone-rim); }
+    .disclaimer { grid-column: 1 / -1; color: var(--text-muted); font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="panel tabs">
+      <button type="button" data-tab="perception" class="active">Perception</button>
+      <button type="button" data-tab="execution">Execution</button>
+      <button type="button" data-tab="governance">Governance</button>
+    </aside>
+    <main class="panel canvas">
+      <div class="nodes" id="nodes">
+        <div class="node locked">Locked</div>
+        <div class="node unlockable">Unlockable</div>
+        <div class="node invested">Rank ≥1</div>
+        <div class="node max">Max</div>
+        <div class="node invested capstone">Capstone</div>
+      </div>
+    </main>
+    <aside class="panel">
+      <strong>Policy inspector</strong>
+      <p style="color: var(--text-muted); font-size: 13px;">M0 stub — compiled AgentPolicy readback lands with live Host.</p>
+    </aside>
+    <p class="disclaimer">
+      Inspired by classic ARPG skill trees. Original chrome &amp; tokens — not affiliated with any game studio or LLM vendor.
+    </p>
+  </div>
+  <script>
+    document.querySelectorAll('.tabs button').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tabs button').forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

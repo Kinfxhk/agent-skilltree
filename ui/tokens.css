@@ -1,0 +1,42 @@
+/* agent-skilltree · color tokens v2026-11-03
+   Original dark gold-green palette. Not CandleDrill / Vest brand hexes. */
+:root {
+  /* Surfaces */
+  --bg-deep: #0d0c0a;
+  --bg-panel: #1a1713;
+  --parchment: #2a241c;
+  --stone: #3a3530;
+
+  /* Metal / chrome */
+  --gold: #c9a24a;
+  --gold-dim: #8a7340;
+  --capstone-rim: #e6c86a;
+  --connector: #6e5a32;
+
+  /* Node states */
+  --edge-unlockable: #e2bc55;
+  --fill-invested: #3f7a48;
+  --glow-max: #9ee08a;
+  --locked: #4a4845;
+  --soft-locked: #5a554c;
+
+  /* Semantic */
+  --danger: #a33c3c; /* governance / safety */
+  --ok: #5a9e62;
+
+  /* Tabs — same family, distinct accents */
+  --tab-perception: #5b8fbf; /* cool steel-blue */
+  --tab-execution: #c9893a;  /* ember amber */
+  --tab-governance: #7a9a58; /* seal olive */
+
+  /* Text */
+  --text-primary: #e8dfc8;
+  --text-muted: #9a9078;
+  --text-inverse: #14120f;
+
+  /* Derived helpers */
+  --rim-width: 2px;
+  --node-size: 64px;
+  --capstone-size: 88px;
+  --glow-blur: 18px;
+}
