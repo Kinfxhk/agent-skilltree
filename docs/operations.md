@@ -126,7 +126,7 @@ npm run ui:serve
 - Left rail **Presets** buttons apply a named build (same `applyPreset` order as the CLI) and write the shared state file.
 - Locale: defaults to the browser/DSH language (`navigator.language`); force with `SKILLTREE_LOCALE=zh_HK npm run ui:serve` or `?lang=en` / `?lang=zh`.
 - Feel: `SFX` toggles synthesized WebAudio cues (no assets); allocate = chime + node pop + points pulse; deny = thud + shake; respec = sweep; preset = chord.
-- In-app DSH panel (experimental): the host plugin starts `127.0.0.1:8780`; the Cordis client launcher is implemented, but a live web test did **not** discover the client bundle. Verify before relying on it. Set `SKILLTREE_UI=0` to disable the host server.
+- In-app DSH panel (live-verified in web): the host plugin starts `127.0.0.1:8780`; the client adds a composer-dock `✦ Skill Tree` button that opens the UI in a portal modal iframe. Set `SKILLTREE_UI=0` to disable the host server.
 - `GET /api/state` reads the state file.
 - `POST /api/state` writes `{ unlocked, pointsRemaining }` (human UI only).
 - The server binds `127.0.0.1`; do not expose it.

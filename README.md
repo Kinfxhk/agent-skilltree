@@ -138,9 +138,9 @@ This proves the plugin is mounted, the read-only tool executes, shell is denied 
 - **Feel**: synthesized WebAudio cues (allocate chime, deny thud, respec sweep, preset chord) with a
   `SFX` toggle; node pop, point-count pulse, deny shake; optional `navigator.vibrate` / WebView haptic
   bridge. No audio assets to download; respects mute.
-- **In DSH (experimental)**: `dsh.client` + a composer-dock launcher are implemented; the host starts a
-  loopback UI server at `127.0.0.1:8780`. A live web test loaded the host server but **DSH did not discover
-  the client bundle** (no button), so the live panel is not verified. The test was rolled back.
+- **In DSH (live-verified)**: `dsh.client` adds a `✦ Skill Tree` button to the composer dock; it opens the
+  UI in a portal modal iframe backed by the plugin's loopback server at `127.0.0.1:8780`. Verified in the
+  live DSH web profile: client bundle loaded, button rendered, iframe opened, English tree visible.
 - `npm run ui:serve` — local server on `127.0.0.1:8780`, with `GET/POST /api/state` so the UI writes the
   same `skilltree-state.json` as the CLI and plugin.
 - Art: `ui/assets/background-grimdark.png`, `node-frame.png`, `sigils.png` — generated with **Grok

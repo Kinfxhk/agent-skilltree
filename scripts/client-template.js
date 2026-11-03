@@ -1,0 +1,76 @@
+// SPDX-License-Identifier: MIT
+window.__ModuleLoader__.load({
+  id: 'agent-skilltree',
+  factory(require) {
+    const React = require('react');
+    let ReactDOM = null;
+    try { ReactDOM = require('react-dom'); } catch {}
+    const h = React.createElement;
+    const UI = 'http://127.0.0.1:8780/preview.html?lang=en&embed=1';
+
+    function Launcher() {
+      const [open, setOpen] = React.useState(false);
+      React.useEffect(() => {
+        if (!open) return undefined;
+        const onKey = (event) => { if (event.key === 'Escape') setOpen(false); };
+        window.addEventListener('keydown', onKey);
+        return () => window.removeEventListener('keydown', onKey);
+      }, [open]);
+
+      const modal = open ? h('div', {
+        role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Agent Skill Tree',
+        style: {
+          position: 'fixed', inset: 0, zIndex: 10000,
+          background: 'rgba(4,3,3,.58)', backdropFilter: 'blur(7px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24,
+        },
+      }, h('div', {
+        style: {
+          position: 'relative', width: 'min(1280px, 94vw)', height: 'min(820px, 90vh)',
+          borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(154,120,56,.55)',
+          boxShadow: '0 24px 90px rgba(0,0,0,.75)', background: '#080706',
+        },
+      },
+        h('iframe', {
+          title: 'Agent Skill Tree',
+          src: UI,
+          style: { width: '100%', height: '100%', border: 0, background: '#080706' },
+        }),
+        h('button', {
+          type: 'button', onClick: () => setOpen(false), title: 'Close',
+          style: {
+            position: 'absolute', top: 8, right: 8, width: 28, height: 28,
+            border: '1px solid rgba(226,188,85,.55)', background: 'rgba(12,9,7,.85)',
+            color: '#e6dcc4', borderRadius: 6, cursor: 'pointer', font: '16px/1 system-ui',
+          },
+        }, '×')
+      )) : null;
+
+      return h(React.Fragment, null,
+        h('button', {
+          type: 'button',
+          title: 'Agent Skill Tree',
+          onClick: () => setOpen((value) => !value),
+          style: {
+            border: '1px solid rgba(154,120,56,.55)',
+            background: 'linear-gradient(180deg, rgba(50,38,22,.9), rgba(16,12,9,.9))',
+            color: '#e6dcc4', borderRadius: 7, padding: '5px 9px', cursor: 'pointer',
+            font: '11px/1.2 system-ui, sans-serif', letterSpacing: '.04em',
+          },
+        }, '✦ Skill Tree'),
+        modal ? (ReactDOM ? ReactDOM.createPortal(modal, document.body) : modal) : null
+      );
+    }
+
+    return {
+      inject: ['slots'],
+      apply(ctx) {
+        ctx.slots.inject('conversation.composer.dock', () => ctx.slots.register({
+          name: 'conversation.composer.dock',
+          id: 'agent-skilltree',
+          order: 20,
+        }, Launcher));
+      },
+    };
+  },
+});
