@@ -80,7 +80,10 @@ export function apply(ctx: LooseCtx = {}): void {
         const selected = new Set(['bash', 'write', 'edit', 'subagent', 'subagent_fork']);
         const focus = schemas.filter((schema) => selected.has(String(schema.name)));
         const anyAgent = (agent as { loopCtx?: object; options?: object; runtimeContext?: object; session?: object }) ?? {};
+        const anyCtxWithGet = ctx as unknown as { get?: (name: string) => unknown; approval?: unknown };
+        const approval = anyCtxWithGet.get?.('approval') ?? anyCtxWithGet.approval;
         return JSON.stringify({
+          approvalService: typeof (approval as { request?: unknown } | undefined)?.request,
           tools: schemas.map((schema) => schema.name).filter(Boolean).sort(),
           focus: focus.map((schema) => ({
             name: schema.name,
