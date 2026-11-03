@@ -13,7 +13,7 @@ line honest.
 - `skilltree.inspect` / `skilltree.export`: executable, read-only.
 - Human CLI: `grant`, `allocate`, `respec`, `preset`, `status`, `export`.
 - Persistent state: `~/.dsh/skilltree-state.json`, shared by CLI / UI server / plugin.
-- 18 vitest tests + `npm run check` green; DSH `skilltree-test` profile loads.
+- 19 vitest tests + `npm run check` green; DSH `skilltree-test` profile loads.
 
 ## Not real yet
 
