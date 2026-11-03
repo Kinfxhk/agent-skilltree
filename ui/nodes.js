@@ -930,7 +930,7 @@ window.SKILLTREE_DATA = {
       "id": "reader-safe",
       "title": "Reader Safe",
       "points": 18,
-      "blurb_zh": "只讀模式：睇圖、搜尋、讀檔；幾乎唔開 Shell／Gateway。",
+      "blurb_zh": "只讀模式：看圖、搜尋、讀檔；幾乎不開 Shell／Gateway。",
       "blurb_en": "Read-only: vision, search, file reads; almost no shell/gateway.",
       "agent_purpose_zh": "Agent 只可以看圖、搜尋、讀檔與整理；不可寫入、不可開 Shell、不可出站，適合審閱與研究。",
       "agent_purpose_en": "The agent may view images, search, read files and summarise; it cannot write, open a shell or go outbound. Suitable for review and research.",
