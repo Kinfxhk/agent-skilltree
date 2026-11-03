@@ -68,7 +68,7 @@ agent is for — not just which nodes are lit. Details: [`docs/operations.md`](d
 
 ```bash
 npm ci
-npm run check                 # build + 18 vitest + hygiene/secret fallback
+npm run check                 # build + 19 vitest + hygiene/secret fallback
 npm run ui:data               # generate ui/nodes.js from the YAML catalog
 npm run skilltree -- presets  # list human builds
 npm run skilltree -- preset solo-dev
@@ -95,7 +95,7 @@ or a registry install for production. See [`docs/operations.md`](docs/operations
 
 | Layer | Status |
 |---|---|
-| `PolicyCompiler` (SkillTreeState → AgentPolicy) | ✅ real; 18 tests |
+| `PolicyCompiler` (SkillTreeState → AgentPolicy) | ✅ real; 19 tests |
 | `pathHygieneCheck` (Path Hygiene + Shell Dialect; allow/deny/ask; never rewrites argv) | ✅ real |
 | `ctx.tools.guard` (path hygiene + locked sensitive tools) | ✅ real; fake-host and DSH profile load verified |
 | `skilltree.inspect` / `skilltree.export` | ✅ executable read-only tools |
